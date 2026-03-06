@@ -1,4 +1,3 @@
-# CodeCraft Club Website
 
 A multi-page PHP website for a college tech/coding club, backed by SQLite and enhanced with Python utility scripts.
 
