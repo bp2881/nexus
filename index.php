@@ -21,14 +21,14 @@ $stats = [
         <div class="hero-content">
             <div class="hero-pill">
                 <span class="msi" style="font-size:15px">bolt</span>
-                Student Tech Club · Est. 2023
+                Student Tech Club · Est. 2026
             </div>
             <h1>
                 Build. <span class="hi">Learn.</span><br>
                 Ship Together.
             </h1>
             <p class="hero-desc">
-                CodeCraft is where students turn ideas into real projects — through hackathons, workshops, open source drives, and a community that genuinely loves to code.
+                Nexus is where students turn ideas into real projects — through hackathons, workshops, open source drives, and a community that genuinely loves to code.
             </p>
             <div class="hero-actions">
                 <a href="/pages/contact.php" class="btn btn-primary">
@@ -72,7 +72,7 @@ $stats = [
     <div class="stats-strip-inner">
         <div class="stat-block">
             <div class="stat-icon"><span class="msi">group</span></div>
-            <div class="stat-num">120+</div>
+            <div class="stat-num">100+</div>
             <div class="stat-label">Active Members</div>
         </div>
         <div class="stat-block">
@@ -202,7 +202,7 @@ $stats = [
 <!-- CTA BANNER -->
 <div style="background:var(--primary);padding:4rem 2.5rem;text-align:center;">
     <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:white;margin-bottom:0.75rem;">Ready to start building?</h2>
-    <p style="color:rgba(255,255,255,0.75);font-size:1rem;max-width:480px;margin:0 auto 2rem;line-height:1.75;">Whether you're a beginner or pro, join CodeCraft and build things that matter.</p>
+    <p style="color:rgba(255,255,255,0.75);font-size:1rem;max-width:480px;margin:0 auto 2rem;line-height:1.75;">Whether you're a beginner or pro, join Nexus and build things that matter.</p>
     <a href="/pages/contact.php" class="btn" style="background:white;color:var(--primary);font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,0.15);">
         <span class="msi" style="font-size:18px">group_add</span>
         Apply to Join

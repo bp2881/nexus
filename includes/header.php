@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($page_title) ? htmlspecialchars($page_title) . ' — CodeCraft' : 'CodeCraft Club' ?></title>
+    <title><?= isset($page_title) ? htmlspecialchars($page_title) . ' — Nexus' : 'Nexus Club' ?></title>
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
 <nav class="navbar">
     <a href="/index.php" class="nav-logo">
-        <div class="nav-logo-icon">CC</div>
-        <span class="nav-logo-text">Code<span>Craft</span></span>
+        <div class="nav-logo-icon"><img src="/assets/images/nexus.png" alt="NC"></div>
+        <span class="nav-logo-text">Nexus<span>Club</span></span>
     </a>
     <button class="nav-toggle" id="navToggle"><span class="msi">menu</span></button>
     <ul class="nav-links" id="navLinks">

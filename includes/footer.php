@@ -3,8 +3,8 @@
     <div class="footer-inner">
         <div class="footer-brand">
             <div class="footer-logo">
-                <div class="nav-logo-icon">CC</div>
-                <span class="nav-logo-text">Code<span style="color:var(--primary)">Craft</span></span>
+                <div class="nav-logo-icon"><img src="/assets/images/nexus.png" alt="NX"></div>
+                <span class="nav-logo-text">Nexus<span style="color:var(--primary)">Club</span></span>
             </div>
             <p>A student-run tech club where curious minds build real things, learn fast, and grow together.</p>
         </div>
@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; <?= date('Y') ?> CodeCraft Club. Built with PHP &amp; SQLite.</p>
+        <p>&copy; <?= date('Y') ?> Nexus Club. Built with PHP &amp; SQLite.</p>
     </div>
 </footer>
 <script src="/assets/js/main.js"></script>
