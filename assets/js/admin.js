@@ -1,4 +1,4 @@
-// CodeCraft Admin JS
+// Nexus Admin JS
 
 // Table live search
 document.querySelectorAll('.table-search').forEach(input => {

@@ -1,7 +1,7 @@
 <?php
-// includes/db.php — SQLite connection helper
+// includes/db.php — SQLite connection
 
-define('DB_PATH', __DIR__ . '/../db/techclub.db');
+define('DB_PATH', __DIR__ . '/../db/nexus.db');
 
 function get_db(): PDO {
     static $pdo = null;

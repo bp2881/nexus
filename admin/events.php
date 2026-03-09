@@ -21,15 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'create') {
         db_execute("INSERT INTO events (title,description,event_date,event_time,location,category) VALUES (?,?,?,?,?,?)",
             [$title,$desc,$date,$time,$location,$category]);
-        $msg = '✅ Event created successfully.'; $action = '';
+        $msg = 'Event created successfully.'; $action = '';
     } elseif ($action === 'edit') {
         $id = (int)($_POST['id'] ?? 0);
         db_execute("UPDATE events SET title=?,description=?,event_date=?,event_time=?,location=?,category=? WHERE id=?",
             [$title,$desc,$date,$time,$location,$category,$id]);
-        $msg = '✅ Event updated.'; $action = '';
+        $msg = 'Event updated.'; $action = '';
     } elseif ($action === 'delete') {
         db_execute("DELETE FROM events WHERE id=?", [(int)($_POST['id'] ?? 0)]);
-        $msg = '✅ Event deleted.'; $action = '';
+        $msg = 'Event deleted.'; $action = '';
     }
 }
 

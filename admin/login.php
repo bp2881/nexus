@@ -15,15 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Login — CodeCraft</title>
+<title>Admin Login — Nexus</title>
 <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body class="login-body">
 <div class="login-card">
     <div class="login-logo">
-        <div class="login-logo-icon">CC</div>
+        <div class="login-logo-icon">NX</div>
         <div>
-            <div class="login-logo-text">Code<span>Craft</span></div>
+            <div class="login-logo-text">Nexus</div>
         </div>
         <span class="login-sub">Admin</span>
     </div>

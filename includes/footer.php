@@ -4,7 +4,7 @@
         <div class="footer-brand">
             <div class="footer-logo">
                 <div class="nav-logo-icon"><img src="/assets/images/nexus.png" alt="NX"></div>
-                <span class="nav-logo-text">Nexus<span style="color:var(--primary)">Club</span></span>
+                <span class="nav-logo-text">Nexus</span>
             </div>
             <p>A student-run tech club where curious minds build real things, learn fast, and grow together.</p>
         </div>

@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
 """
-stats_report.py — Generate a summary report of club activity from the database.
+stats_report.py — Print a summary of club activity from MySQL.
 Usage: python3 stats_report.py
+
+Install dependency first:
+    pip install pymysql
 """
 
-import sqlite3, os
+import pymysql
+import os
 from datetime import datetime
 
-DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'db', 'techclub.db')
+DB_HOST = 'sqlXXX.infinityfree.com'
+DB_NAME = 'ifXXXXXXXX_techclub'
+DB_USER = 'ifXXXXXXXX'
+DB_PASS = 'your_db_password'
 
-def generate_report():
-    conn = sqlite3.connect(DB_PATH)
+def report():
+    conn = pymysql.connect(host=DB_HOST, user=DB_USER, password=DB_PASS, database=DB_NAME, charset='utf8mb4')
     c = conn.cursor()
 
     print("\n" + "="*50)
@@ -18,27 +25,12 @@ def generate_report():
     print(f"    Generated: {datetime.now().strftime('%d %b %Y, %H:%M')}")
     print("="*50)
 
-    c.execute("SELECT COUNT(*) FROM events")
-    print(f"\n📅 Total Events        : {c.fetchone()[0]}")
-
-    c.execute("SELECT COUNT(*) FROM projects")
-    print(f"🛠  Total Projects      : {c.fetchone()[0]}")
-
-    c.execute("SELECT COUNT(*) FROM projects WHERE is_top=1")
-    print(f"⭐ Top Projects        : {c.fetchone()[0]}")
-
-    c.execute("SELECT COUNT(*) FROM blog_posts")
-    print(f"📝 Blog Posts          : {c.fetchone()[0]}")
-
-    c.execute("SELECT COUNT(*) FROM materials")
-    print(f"📚 Study Materials     : {c.fetchone()[0]}")
-
-    c.execute("SELECT COUNT(*) FROM contact_requests")
-    print(f"📬 Contact Requests    : {c.fetchone()[0]}")
+    for label, table in [('Events','events'),('Projects','projects'),('Materials','materials'),('Blog Posts','blog_posts'),('Contacts','contact_requests')]:
+        c.execute(f"SELECT COUNT(*) FROM {table}")
+        print(f"\n  {label:20}: {c.fetchone()[0]}")
 
     print("\n--- Upcoming Events ---")
-    today = datetime.today().strftime('%Y-%m-%d')
-    c.execute("SELECT title, event_date, location FROM events WHERE event_date >= ? ORDER BY event_date LIMIT 5", (today,))
+    c.execute("SELECT title, event_date, location FROM events WHERE event_date >= date('now') ORDER BY event_date LIMIT 5")
     for row in c.fetchall():
         print(f"  • {row[0]} | {row[1]} | {row[2]}")
 
@@ -51,4 +43,4 @@ def generate_report():
     conn.close()
 
 if __name__ == '__main__':
-    generate_report()
+    report()

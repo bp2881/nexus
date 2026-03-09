@@ -1,4 +1,4 @@
-// CodeCraft — main.js
+// Nexus — main.js
 
 // Mobile nav toggle
 const toggle = document.getElementById('navToggle');

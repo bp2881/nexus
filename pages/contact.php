@@ -30,7 +30,7 @@ $prefill_type = $_GET['type'] ?? 'join';
 <div class="page-hero">
     <div class="page-hero-inner">
         <div class="eyebrow"><span class="msi" style="font-size:14px">group_add</span>Get Involved</div>
-        <h1>Join CodeCraft</h1>
+        <h1>Join Nexus</h1>
         <p>Whether you're a complete beginner or a seasoned engineer — there's a place for you here.</p>
     </div>
 </div>
@@ -85,7 +85,7 @@ $prefill_type = $_GET['type'] ?? 'join';
 
         <!-- INFO -->
         <div>
-            <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:1.5rem;">Why Join CodeCraft?</h2>
+            <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:1.5rem;">Why Join Nexus?</h2>
             <div style="display:flex;flex-direction:column;gap:1rem;">
                 <?php $perks = [
                     ['build','Build Real Projects','Work on projects that matter — hackathons, freelance, open source.','#e8f0fe','var(--primary)'],
@@ -112,8 +112,8 @@ $prefill_type = $_GET['type'] ?? 'join';
                 </p>
                 <p style="font-size:0.875rem;color:var(--text-mid);line-height:2;">
                     📍 CS Department, Room 101<br>
-                    📧 codecraft@college.edu<br>
-                    💬 discord.gg/codecraft
+                    📧 nexus@college.edu<br>
+                    💬 discord.gg/nexus
                 </p>
             </div>
         </div>

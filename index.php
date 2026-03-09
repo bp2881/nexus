@@ -21,7 +21,7 @@ $stats = [
         <div class="hero-content">
             <div class="hero-pill">
                 <span class="msi" style="font-size:15px">bolt</span>
-                Student Tech Club · Est. 2026
+                Student Tech Club · Est. 2023
             </div>
             <h1>
                 Build. <span class="hi">Learn.</span><br>
@@ -72,7 +72,7 @@ $stats = [
     <div class="stats-strip-inner">
         <div class="stat-block">
             <div class="stat-icon"><span class="msi">group</span></div>
-            <div class="stat-num">100+</div>
+            <div class="stat-num">120+</div>
             <div class="stat-label">Active Members</div>
         </div>
         <div class="stat-block">

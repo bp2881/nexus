@@ -2,7 +2,7 @@
 // admin/auth.php — Session-based authentication for admin panel
 
 define('ADMIN_USER', 'admin');
-// Password: "codecraft2025" — change this! Generate with: php -r "echo password_hash('yourpassword', PASSWORD_DEFAULT);"
+// Password: "nexus2025" — change this! Generate with: php -r "echo password_hash('yourpassword', PASSWORD_DEFAULT);"
 define('ADMIN_PASS_HASH', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'); // "password" for demo
 
 function require_login(): void {
