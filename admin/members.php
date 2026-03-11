@@ -8,25 +8,29 @@ $msg = $err = '';
 $action = $_SERVER['REQUEST_METHOD'] === 'POST' ? ($_POST['action'] ?? '') : ($_GET['action'] ?? '');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name    = trim($_POST['name']    ?? '');
-    $email   = trim($_POST['email']   ?? '');
-    $role    = trim($_POST['role']    ?? 'member');
-    $team_id = (int)($_POST['team_id'] ?? 0) ?: null;
-
-    if (!$name) {
-        $err = 'Member name is required.';
-    } elseif ($action === 'create') {
-        db_execute("INSERT INTO members (name, email, role, team_id) VALUES (?,?,?,?)",
-            [$name, $email, $role, $team_id]);
-        $msg = '✅ Member added.'; $action = '';
-    } elseif ($action === 'edit') {
-        $id = (int)($_POST['id'] ?? 0);
-        db_execute("UPDATE members SET name=?, email=?, role=?, team_id=? WHERE id=?",
-            [$name, $email, $role, $team_id, $id]);
-        $msg = '✅ Member updated.'; $action = '';
-    } elseif ($action === 'delete') {
+    if ($action === 'delete') {
         db_execute("DELETE FROM members WHERE id=?", [(int)($_POST['id'] ?? 0)]);
-        $msg = '✅ Member removed.'; $action = '';
+        $msg = 'Member removed.'; $action = '';
+    } else {
+        $name    = trim($_POST['name']        ?? '');
+        $email   = trim($_POST['email']       ?? '');
+        $role    = trim($_POST['role']        ?? 'member');
+        $desig   = trim($_POST['designation'] ?? '');
+        $photo   = trim($_POST['photo_url']   ?? '');
+        $team_id = (int)($_POST['team_id']    ?? 0) ?: null;
+
+        if (!$name) {
+            $err = 'Member name is required.';
+        } elseif ($action === 'create') {
+            db_execute("INSERT INTO members (name, email, role, designation, photo_url, team_id) VALUES (?,?,?,?,?,?)",
+                [$name, $email, $role, $desig, $photo, $team_id]);
+            $msg = 'Member added.'; $action = '';
+        } elseif ($action === 'edit') {
+            $id = (int)($_POST['id'] ?? 0);
+            db_execute("UPDATE members SET name=?, email=?, role=?, designation=?, photo_url=?, team_id=? WHERE id=?",
+                [$name, $email, $role, $desig, $photo, $team_id, $id]);
+            $msg = 'Member updated.'; $action = '';
+        }
     }
 }
 
@@ -70,10 +74,18 @@ require_once __DIR__ . '/partials/header.php';
                 <div class="form-group-admin">
                     <label>Role</label>
                     <select name="role">
-                        <?php foreach (['member','lead','core','advisor'] as $r): ?>
-                        <option value="<?= $r ?>" <?= ($edit_item['role'] ?? 'member') === $r ? 'selected' : '' ?>><?= ucfirst($r) ?></option>
+                        <?php foreach (['hod'=>'HOD','faculty_coordinator'=>'Faculty Coordinator','student_coordinator'=>'Student Coordinator','lead'=>'Team Lead','member'=>'Member'] as $rv => $rl): ?>
+                        <option value="<?= $rv ?>" <?= ($edit_item['role'] ?? 'member') === $rv ? 'selected' : '' ?>><?= $rl ?></option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+                <div class="form-group-admin">
+                    <label>Designation <small style="font-weight:400;color:var(--text-dim)">(displayed title, e.g. "Assoc. Prof, CSE")</small></label>
+                    <input type="text" name="designation" value="<?= htmlspecialchars($edit_item['designation'] ?? '') ?>" placeholder="e.g. Associate Professor, CSE">
+                </div>
+                <div class="form-group-admin">
+                    <label>Photo URL <small style="font-weight:400;color:var(--text-dim)">(direct image link)</small></label>
+                    <input type="url" name="photo_url" value="<?= htmlspecialchars($edit_item['photo_url'] ?? '') ?>" placeholder="https://i.imgur.com/photo.jpg">
                 </div>
                 <div class="form-group-admin">
                     <label>Assign to Team</label>

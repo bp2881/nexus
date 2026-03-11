@@ -16,7 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category   = trim($_POST['category']     ?? 'general');
     $difficulty = trim($_POST['difficulty']   ?? 'beginner');
 
-    if (!$title) {
+    if ($action === 'delete') {
+        db_execute("DELETE FROM materials WHERE id=?", [(int)($_POST['id'] ?? 0)]);
+        $msg = '✅ Material deleted.'; $action = '';
+    } elseif (!$title) {
         $err = 'Title is required.';
     } elseif ($action === 'create') {
         db_execute("INSERT INTO materials (title,description,external_url,file_url,category,difficulty) VALUES (?,?,?,?,?,?)",
@@ -27,9 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         db_execute("UPDATE materials SET title=?,description=?,external_url=?,file_url=?,category=?,difficulty=? WHERE id=?",
             [$title,$desc,$ext_url,$file_url,$category,$difficulty,$id]);
         $msg = '✅ Material updated.'; $action = '';
-    } elseif ($action === 'delete') {
-        db_execute("DELETE FROM materials WHERE id=?", [(int)($_POST['id'] ?? 0)]);
-        $msg = '✅ Material deleted.'; $action = '';
     }
 }
 

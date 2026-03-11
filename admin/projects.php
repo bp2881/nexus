@@ -16,8 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $team   = trim($_POST['team_members'] ?? '');
     $is_top = isset($_POST['is_top']) ? 1 : 0;
 
-    if (!$title) { $err = 'Project title is required.'; }
-    elseif ($action === 'create') {
+    if ($action === 'delete') {
+        db_execute("DELETE FROM projects WHERE id=?", [(int)($_POST['id'] ?? 0)]);
+        $msg = '✅ Project deleted.'; $action = '';
+    } elseif (!$title) {
+        $err = 'Project title is required.';
+    } elseif ($action === 'create') {
         db_execute("INSERT INTO projects (title,description,tech_stack,github_url,demo_url,team_members,is_top) VALUES (?,?,?,?,?,?,?)",
             [$title,$desc,$tech,$github,$demo,$team,$is_top]);
         $msg = '✅ Project added.'; $action = '';
@@ -26,9 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         db_execute("UPDATE projects SET title=?,description=?,tech_stack=?,github_url=?,demo_url=?,team_members=?,is_top=? WHERE id=?",
             [$title,$desc,$tech,$github,$demo,$team,$is_top,$id]);
         $msg = '✅ Project updated.'; $action = '';
-    } elseif ($action === 'delete') {
-        db_execute("DELETE FROM projects WHERE id=?", [(int)($_POST['id'] ?? 0)]);
-        $msg = '✅ Project deleted.'; $action = '';
     }
 }
 

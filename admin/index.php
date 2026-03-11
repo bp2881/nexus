@@ -10,7 +10,7 @@ $counts = [
     'events'    => db_query("SELECT COUNT(*) c FROM events")[0]['c'],
     'projects'  => db_query("SELECT COUNT(*) c FROM projects")[0]['c'],
     'materials' => db_query("SELECT COUNT(*) c FROM materials")[0]['c'],
-    'gallery'   => db_query("SELECT COUNT(*) c FROM gallery")[0]['c'],
+    'gallery'   => db_query("SELECT COUNT(*) c FROM gallery_albums")[0]['c'],
     'contacts'  => db_query("SELECT COUNT(*) c FROM contact_requests")[0]['c'],
 ];
 

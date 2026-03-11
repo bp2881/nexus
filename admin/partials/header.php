@@ -37,6 +37,7 @@
         </div>
         <div class="nav-group">
             <div class="nav-group-label">Site</div>
+            <a href="/pages/leaderboard.php" target="_blank"><span class="msi">emoji_events</span>Leaderboard</a>
             <a href="/index.php" target="_blank"><span class="msi">open_in_new</span>View Site</a>
             <a href="/admin/logout.php" class="nav-danger"><span class="msi">logout</span>Logout</a>
         </div>

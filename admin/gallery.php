@@ -5,89 +5,166 @@ require_login();
 $page_title = 'Gallery';
 $msg = $err = '';
 
-$action = $_SERVER['REQUEST_METHOD'] === 'POST' ? ($_POST['action'] ?? '') : ($_GET['action'] ?? '');
+define('UPLOAD_DIR',  __DIR__ . '/../assets/uploads/gallery/');
+define('UPLOAD_PATH', '/assets/uploads/gallery/');
 
+if (!is_dir(UPLOAD_DIR)) mkdir(UPLOAD_DIR, 0755, true);
+
+// ── Upload helper ────────────────────────────────────────────────────────
+function handle_thumbnail_upload(string $field = 'thumbnail'): ?string {
+    if (empty($_FILES[$field]['tmp_name'])) return null;
+    $file  = $_FILES[$field];
+    if ($file['error'] !== UPLOAD_ERR_OK) return null;
+
+    $ext   = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $allow = ['jpg','jpeg','png','webp','gif'];
+    if (!in_array($ext, $allow)) return null;
+
+    if ($file['size'] > 8 * 1024 * 1024) return null; // 8 MB max
+
+    $name  = uniqid('thumb_', true) . '.' . $ext;
+    move_uploaded_file($file['tmp_name'], UPLOAD_DIR . $name);
+    return $name;
+}
+
+$action = $_SERVER['REQUEST_METHOD'] === 'POST'
+        ? ($_POST['action'] ?? '')
+        : ($_GET['action']  ?? '');
+
+// ── POST handlers ────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title      = trim($_POST['title']       ?? '');
-    $desc       = trim($_POST['description'] ?? '');
-    $image_url  = trim($_POST['image_url']   ?? '');
-    $event_name = trim($_POST['event_name']  ?? '');
 
-    if (!$title) {
-        $err = 'Photo title is required.';
-    } elseif ($action === 'create') {
-        db_execute("INSERT INTO gallery (title, description, image_url, event_name) VALUES (?,?,?,?)",
-            [$title, $desc, $image_url, $event_name]);
-        $msg = '✅ Photo added to gallery.'; $action = '';
-    } elseif ($action === 'edit') {
-        $id = (int)($_POST['id'] ?? 0);
-        db_execute("UPDATE gallery SET title=?, description=?, image_url=?, event_name=? WHERE id=?",
-            [$title, $desc, $image_url, $event_name, $id]);
-        $msg = '✅ Photo updated.'; $action = '';
-    } elseif ($action === 'delete') {
-        db_execute("DELETE FROM gallery WHERE id=?", [(int)($_POST['id'] ?? 0)]);
-        $msg = '✅ Photo removed.'; $action = '';
+    if ($action === 'delete_album') {
+        // Delete thumbnail file from disk
+        $row = db_query("SELECT thumbnail FROM gallery_albums WHERE id=?", [(int)($_POST['id'] ?? 0)])[0] ?? null;
+        if ($row && $row['thumbnail'] && file_exists(UPLOAD_DIR . $row['thumbnail']))
+            unlink(UPLOAD_DIR . $row['thumbnail']);
+        db_execute("DELETE FROM gallery_albums WHERE id=?", [(int)($_POST['id'] ?? 0)]);
+        $msg = 'Album deleted.'; $action = '';
+
+    } elseif ($action === 'save_album') {
+        $name   = trim($_POST['event_name']       ?? '');
+        $desc   = trim($_POST['description']       ?? '');
+        $folder = trim($_POST['drive_folder_url']  ?? '');
+        $id     = (int)($_POST['id'] ?? 0);
+
+        if (!$name) {
+            $err = 'Event name is required.';
+        } else {
+            $new_thumb = handle_thumbnail_upload('thumbnail');
+
+            if ($id) {
+                // Keep old thumbnail unless a new one was uploaded
+                $old = db_query("SELECT thumbnail FROM gallery_albums WHERE id=?", [$id])[0] ?? [];
+                $thumb = $new_thumb ?? ($old['thumbnail'] ?? null);
+                // Delete old file if replaced
+                if ($new_thumb && !empty($old['thumbnail']) && file_exists(UPLOAD_DIR . $old['thumbnail']))
+                    unlink(UPLOAD_DIR . $old['thumbnail']);
+                db_execute(
+                    "UPDATE gallery_albums SET event_name=?, description=?, thumbnail=?, drive_folder_url=? WHERE id=?",
+                    [$name, $desc, $thumb, $folder, $id]);
+                $msg = 'Album updated.';
+            } else {
+                db_execute(
+                    "INSERT INTO gallery_albums (event_name, description, thumbnail, drive_folder_url) VALUES (?,?,?,?)",
+                    [$name, $desc, $new_thumb, $folder]);
+                $msg = 'Album created.';
+            }
+            $action = '';
+        }
     }
 }
 
-$photos    = db_query("SELECT * FROM gallery ORDER BY created_at DESC");
-$edit_item = ($action === 'edit' && isset($_GET['id'])) ? (db_query("SELECT * FROM gallery WHERE id=?", [(int)$_GET['id']])[0] ?? null) : null;
-$show_form = ($action === 'new' || $action === 'edit');
+$albums    = db_query("SELECT * FROM gallery_albums ORDER BY created_at DESC");
+$edit_item = ($action === 'edit_album' && isset($_GET['id']))
+           ? (db_query("SELECT * FROM gallery_albums WHERE id=?", [(int)$_GET['id']])[0] ?? null)
+           : null;
+$show_form = ($action === 'new_album' || $action === 'edit_album');
 
 require_once __DIR__ . '/partials/header.php';
 ?>
 
 <div class="page-header">
     <div><p class="page-eyebrow">Content</p><h1>Gallery</h1></div>
-    <a href="?action=new" class="btn btn-primary"><span class="msi">add_photo_alternate</span>Add Photo</a>
+    <a href="?action=new_album" class="btn btn-primary"><span class="msi">create_new_folder</span>New Album</a>
 </div>
 
 <?php if ($msg): ?><div class="alert alert-success"><span class="msi">check_circle</span><?= htmlspecialchars($msg) ?></div><?php endif; ?>
 <?php if ($err): ?><div class="alert alert-error"><span class="msi">error</span><?= htmlspecialchars($err) ?></div><?php endif; ?>
 
+<!-- ── ALBUM FORM ──────────────────────────────────────────────────────── -->
 <?php if ($show_form): ?>
 <div class="form-panel">
     <div class="form-panel-header">
-        <div class="form-panel-title"><span class="msi">photo_library</span><?= $edit_item ? 'Edit Photo' : 'Add New Photo' ?></div>
+        <div class="form-panel-title">
+            <span class="msi">photo_library</span>
+            <?= $edit_item ? 'Edit Album — '.htmlspecialchars($edit_item['event_name']) : 'New Album' ?>
+        </div>
         <a href="/admin/gallery.php" class="form-panel-close">✕</a>
     </div>
     <div class="form-panel-body">
-        <div class="alert alert-info" style="margin-bottom:1.25rem;">
-            <span class="msi">info</span>
-            Paste a direct image URL (e.g. from Google Drive, Imgur, or your hosting). For Google Drive: share the image → get shareable link → convert to direct link using <strong>drive.google.com/uc?id=FILE_ID</strong>.
-        </div>
-        <form method="POST" action="/admin/gallery.php">
-            <input type="hidden" name="action" value="<?= $edit_item ? 'edit' : 'create' ?>">
+        <!-- multipart/form-data required for file upload -->
+        <form method="POST" action="/admin/gallery.php" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="save_album">
             <?php if ($edit_item): ?><input type="hidden" name="id" value="<?= $edit_item['id'] ?>"><?php endif; ?>
+
             <div class="form-grid form-grid-2">
                 <div class="form-group-admin">
-                    <label>Photo Title *</label>
-                    <input type="text" name="title" required value="<?= htmlspecialchars($edit_item['title'] ?? '') ?>" placeholder="e.g. Hackathon 2025 Team Photo">
+                    <label>Event / Album Name *</label>
+                    <input type="text" name="event_name" required
+                           value="<?= htmlspecialchars($edit_item['event_name'] ?? '') ?>"
+                           placeholder="e.g. Hackathon 2025">
                 </div>
                 <div class="form-group-admin">
-                    <label>Event / Album Name</label>
-                    <input type="text" name="event_name" value="<?= htmlspecialchars($edit_item['event_name'] ?? '') ?>" placeholder="e.g. Annual Hackathon 2025">
+                    <label>Description</label>
+                    <input type="text" name="description"
+                           value="<?= htmlspecialchars($edit_item['description'] ?? '') ?>"
+                           placeholder="One-line summary of the event">
                 </div>
             </div>
+
+            <!-- Thumbnail upload -->
             <div class="form-group-admin" style="margin-top:1.1rem;">
-                <label>Image URL *</label>
-                <input type="url" name="image_url" required value="<?= htmlspecialchars($edit_item['image_url'] ?? '') ?>" placeholder="https://i.imgur.com/yourimage.jpg" id="imgUrlInput">
+                <label>Cover / Thumbnail Image <?= $edit_item && $edit_item['thumbnail'] ? '<span style="font-weight:400;color:var(--text-dim)">(upload new to replace)</span>' : '*' ?></label>
+                <small style="display:block;color:var(--text-dim);margin-bottom:.45rem;">
+                    Select an image from your device (JPG, PNG, WebP). Max 8 MB. This is shown as the album card on the public gallery page.
+                </small>
+                <input type="file" name="thumbnail" accept="image/jpeg,image/png,image/webp,image/gif"
+                       id="thumbFile" <?= ($edit_item && $edit_item['thumbnail']) ? '' : 'required' ?>
+                       style="display:block;padding:.4rem 0;">
+                <!-- Preview of selected file -->
+                <div id="new-preview-wrap" style="display:none;margin-top:.6rem;">
+                    <div style="font-size:.72rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;">New thumbnail preview</div>
+                    <img id="new-preview" style="max-height:160px;border-radius:var(--radius);border:1px solid var(--border);object-fit:cover;">
+                </div>
+                <!-- Current thumbnail (edit mode) -->
+                <?php if ($edit_item && $edit_item['thumbnail']): ?>
+                <div style="margin-top:.6rem;">
+                    <div style="font-size:.72rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;">Current thumbnail</div>
+                    <img src="<?= UPLOAD_PATH . htmlspecialchars($edit_item['thumbnail']) ?>"
+                         style="max-height:140px;border-radius:var(--radius);border:1px solid var(--border);object-fit:cover;"
+                         onerror="this.style.display='none'">
+                </div>
+                <?php endif; ?>
             </div>
 
-            <!-- Live preview -->
-            <div id="img-preview-wrap" style="margin-top:0.75rem;display:<?= !empty($edit_item['image_url']) ? 'block' : 'none' ?>;">
-                <div style="font-size:0.72rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.4rem;">Preview</div>
-                <img id="img-preview" src="<?= htmlspecialchars($edit_item['image_url'] ?? '') ?>"
-                     style="max-height:200px;max-width:100%;border-radius:var(--radius);border:1px solid var(--border);object-fit:cover;"
-                     onerror="this.style.display='none'">
+            <!-- Drive folder link -->
+            <div class="form-group-admin" style="margin-top:1.1rem;">
+                <label>Google Drive Folder Link</label>
+                <small style="display:block;color:var(--text-dim);margin-bottom:.45rem;">
+                    In Google Drive: right-click the folder → <strong>Share</strong> → <strong>Copy link</strong>. Paste it here.
+                    Users will be redirected to this folder when they click the album.
+                </small>
+                <input type="url" name="drive_folder_url"
+                       value="<?= htmlspecialchars($edit_item['drive_folder_url'] ?? '') ?>"
+                       placeholder="https://drive.google.com/drive/folders/1AbCdEfGhIjKlMn…">
             </div>
 
-            <div class="form-group-admin" style="margin-top:1.1rem;">
-                <label>Caption / Description</label>
-                <textarea name="description" rows="2" placeholder="Short caption..."><?= htmlspecialchars($edit_item['description'] ?? '') ?></textarea>
-            </div>
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary"><span class="msi"><?= $edit_item?'save':'add_photo_alternate' ?></span><?= $edit_item ? 'Save Changes' : 'Add to Gallery' ?></button>
+                <button type="submit" class="btn btn-primary">
+                    <span class="msi"><?= $edit_item ? 'save' : 'create_new_folder' ?></span>
+                    <?= $edit_item ? 'Save Changes' : 'Create Album' ?>
+                </button>
                 <a href="/admin/gallery.php" class="btn btn-outline">Cancel</a>
             </div>
         </form>
@@ -95,15 +172,13 @@ require_once __DIR__ . '/partials/header.php';
 </div>
 
 <script>
-// Live preview as user types URL
-document.getElementById('imgUrlInput')?.addEventListener('input', function() {
-    const wrap = document.getElementById('img-preview-wrap');
-    const img  = document.getElementById('img-preview');
-    if (this.value) {
-        wrap.style.display = 'block';
-        img.style.display  = 'block';
-        img.src = this.value;
-        img.onerror = () => img.style.display = 'none';
+document.getElementById('thumbFile').addEventListener('change', function () {
+    const wrap = document.getElementById('new-preview-wrap');
+    const img  = document.getElementById('new-preview');
+    if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => { img.src = e.target.result; wrap.style.display = 'block'; };
+        reader.readAsDataURL(this.files[0]);
     } else {
         wrap.style.display = 'none';
     }
@@ -111,101 +186,81 @@ document.getElementById('imgUrlInput')?.addEventListener('input', function() {
 </script>
 <?php endif; ?>
 
-<!-- GALLERY GRID PREVIEW -->
-<?php if (!empty($photos)): ?>
-<div style="margin-bottom:1.5rem;">
-    <div style="font-size:0.75rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem;display:flex;align-items:center;gap:0.4rem;">
-        <span class="msi" style="font-size:16px">grid_view</span> Photo Grid (<?= count($photos) ?> photos)
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.75rem;">
-        <?php foreach ($photos as $p): ?>
-        <div style="position:relative;border-radius:var(--radius);overflow:hidden;background:var(--surface2);border:1px solid var(--border);aspect-ratio:4/3;group;">
-            <?php if ($p['image_url']): ?>
-            <img src="<?= htmlspecialchars($p['image_url']) ?>"
-                 alt="<?= htmlspecialchars($p['title']) ?>"
+<!-- ── ALBUM LIST ─────────────────────────────────────────────────────── -->
+<?php if (empty($albums)): ?>
+<div class="empty-state">
+    <div class="empty-icon"><span class="msi" style="font-size:2.5rem">photo_library</span></div>
+    <p>No albums yet. <a href="?action=new_album" style="color:var(--primary)">Create the first one →</a></p>
+</div>
+
+<?php else: ?>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;">
+    <?php foreach ($albums as $a): ?>
+    <div style="background:white;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);">
+
+        <!-- Thumbnail -->
+        <div style="aspect-ratio:16/9;background:var(--surface2);position:relative;overflow:hidden;">
+            <?php if ($a['thumbnail']): ?>
+            <img src="<?= UPLOAD_PATH . htmlspecialchars($a['thumbnail']) ?>"
                  style="width:100%;height:100%;object-fit:cover;"
-                 onerror="this.parentElement.style.background='var(--danger-light)';this.style.display='none';">
+                 onerror="this.style.display='none'">
             <?php else: ?>
-            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.3rem;color:var(--text-dim);">
-                <span class="msi" style="font-size:2rem;opacity:0.3">image</span>
-                <span style="font-size:0.7rem;">No image</span>
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;color:var(--text-dim);gap:.4rem;">
+                <span class="msi" style="font-size:2.5rem;opacity:.3">image</span>
+                <span style="font-size:.72rem;">No thumbnail</span>
             </div>
             <?php endif; ?>
-            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.75));padding:0.6rem 0.5rem 0.5rem;color:white;">
-                <div style="font-size:0.72rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><?= htmlspecialchars($p['title']) ?></div>
-                <?php if ($p['event_name']): ?>
-                <div style="font-size:0.62rem;opacity:0.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><?= htmlspecialchars($p['event_name']) ?></div>
-                <?php endif; ?>
+            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.65));padding:.75rem .85rem .6rem;">
+                <div style="color:white;font-weight:800;font-size:.95rem;"><?= htmlspecialchars($a['event_name']) ?></div>
             </div>
-            <!-- Hover actions -->
-            <div style="position:absolute;top:0.4rem;right:0.4rem;display:flex;gap:0.3rem;">
-                <a href="?action=edit&id=<?= $p['id'] ?>" class="btn btn-warning btn-sm" style="padding:0.25rem 0.4rem;" title="Edit"><span class="msi" style="font-size:13px">edit</span></a>
-                <form method="POST" class="delete-form" data-title="<?= htmlspecialchars($p['title']) ?>" style="display:inline;">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="id"     value="<?= $p['id'] ?>">
-                    <button type="submit" class="btn btn-danger btn-sm" style="padding:0.25rem 0.4rem;" title="Delete"><span class="msi" style="font-size:13px">delete</span></button>
+        </div>
+
+        <!-- Info + actions -->
+        <div style="padding:.85rem 1rem;">
+            <?php if ($a['description']): ?>
+            <div style="font-size:.78rem;color:var(--text-mid);margin-bottom:.5rem;"><?= htmlspecialchars($a['description']) ?></div>
+            <?php endif; ?>
+
+            <!-- Drive link status -->
+            <?php if ($a['drive_folder_url']): ?>
+            <a href="<?= htmlspecialchars($a['drive_folder_url']) ?>" target="_blank"
+               style="display:inline-flex;align-items:center;gap:.3rem;font-size:.75rem;color:var(--primary);text-decoration:none;margin-bottom:.65rem;background:var(--primary-light);padding:.25rem .6rem;border-radius:100px;">
+                <span class="msi" style="font-size:14px">folder_open</span>View Drive Folder
+            </a>
+            <?php else: ?>
+            <div style="display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--warning);margin-bottom:.65rem;background:var(--warning-light,#fffbeb);padding:.2rem .55rem;border-radius:100px;">
+                <span class="msi" style="font-size:13px">warning</span>No Drive link set
+            </div>
+            <?php endif; ?>
+
+            <div style="display:flex;gap:.5rem;">
+                <a href="?action=edit_album&id=<?= $a['id'] ?>" class="btn btn-warning btn-sm" style="flex:1;justify-content:center;">
+                    <span class="msi" style="font-size:14px">edit</span>Edit
+                </a>
+                <form method="POST" class="delete-form" data-title="<?= htmlspecialchars($a['event_name']) ?>" style="display:inline;">
+                    <input type="hidden" name="action" value="delete_album">
+                    <input type="hidden" name="id"     value="<?= $a['id'] ?>">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        <span class="msi" style="font-size:14px">delete</span>Delete
+                    </button>
                 </form>
             </div>
         </div>
-        <?php endforeach; ?>
     </div>
+    <?php endforeach; ?>
 </div>
 <?php endif; ?>
-
-<!-- TABLE VIEW -->
-<div class="table-wrap">
-    <div class="table-toolbar">
-        <span class="table-toolbar-title"><?= count($photos) ?> Photos</span>
-        <input type="text" class="table-search" placeholder="Search photos…" data-target="#gallery-tbody">
-    </div>
-    <?php if (empty($photos)): ?>
-    <div class="empty-state">
-        <div class="empty-icon"><span class="msi" style="font-size:2.5rem">photo_library</span></div>
-        <p>No photos yet. <a href="?action=new" style="color:var(--primary)">Add the first one →</a></p>
-    </div>
-    <?php else: ?>
-    <table>
-        <thead><tr><th>#</th><th>Preview</th><th>Title</th><th>Event / Album</th><th>Caption</th><th>Added</th><th>Actions</th></tr></thead>
-        <tbody id="gallery-tbody">
-        <?php foreach ($photos as $p): ?>
-        <tr>
-            <td class="td-mono"><?= $p['id'] ?></td>
-            <td>
-                <?php if ($p['image_url']): ?>
-                <img src="<?= htmlspecialchars($p['image_url']) ?>" style="width:60px;height:44px;object-fit:cover;border-radius:6px;border:1px solid var(--border);" onerror="this.style.display='none'">
-                <?php else: ?>
-                <div style="width:60px;height:44px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:16px;color:var(--text-dim)">image</span></div>
-                <?php endif; ?>
-            </td>
-            <td><div class="td-title"><?= htmlspecialchars($p['title']) ?></div></td>
-            <td class="td-mono"><?= htmlspecialchars($p['event_name'] ?: '—') ?></td>
-            <td style="max-width:180px;font-size:0.8rem;color:var(--text-mid);"><?= htmlspecialchars(substr($p['description'] ?: '—', 0, 60)) ?></td>
-            <td class="td-mono"><?= date('d M Y', strtotime($p['created_at'])) ?></td>
-            <td>
-                <div class="td-actions">
-                    <a href="?action=edit&id=<?= $p['id'] ?>" class="btn btn-warning btn-sm"><span class="msi" style="font-size:14px">edit</span>Edit</a>
-                    <form method="POST" class="delete-form" data-title="<?= htmlspecialchars($p['title']) ?>">
-                        <input type="hidden" name="action" value="delete">
-                        <input type="hidden" name="id"     value="<?= $p['id'] ?>">
-                        <button type="submit" class="btn btn-danger btn-sm"><span class="msi" style="font-size:14px">delete</span>Delete</button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-    <?php endif; ?>
-</div>
 
 <div class="confirm-overlay" id="confirm-overlay">
     <div class="confirm-box">
         <div class="confirm-icon"><span class="msi">delete_forever</span></div>
-        <h3>Remove Photo?</h3>
-        <p>Remove "<span id="confirm-item-name"></span>" from the gallery?</p>
+        <h3>Delete Album?</h3>
+        <p>Delete "<span id="confirm-item-name"></span>"? The thumbnail file will also be removed.</p>
         <div class="confirm-actions">
             <button class="btn btn-outline" onclick="cancelDelete()">Cancel</button>
-            <button class="btn btn-danger"  onclick="proceedDelete()"><span class="msi" style="font-size:15px">delete</span>Remove</button>
+            <button class="btn btn-danger"  onclick="proceedDelete()">
+                <span class="msi" style="font-size:15px">delete</span>Delete
+            </button>
         </div>
     </div>
 </div>

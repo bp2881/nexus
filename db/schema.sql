@@ -45,13 +45,16 @@ CREATE TABLE IF NOT EXISTS materials (
     created_at   DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS gallery (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    title       TEXT NOT NULL,
-    description TEXT,
-    image_url   TEXT,
-    event_name  TEXT,
-    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+-- Gallery albums: one card per event on the public page.
+-- Thumbnail is a locally uploaded image file (stored in assets/uploads/gallery/).
+-- drive_folder_url is a shared Google Drive folder — clicking the album opens it.
+CREATE TABLE IF NOT EXISTS gallery_albums (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_name       TEXT NOT NULL,
+    description      TEXT,
+    thumbnail        TEXT,   -- filename only, e.g. "hackathon2025.jpg" stored in assets/uploads/gallery/
+    drive_folder_url TEXT,   -- Google Drive folder share link
+    created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS contact_requests (
@@ -74,13 +77,19 @@ CREATE TABLE IF NOT EXISTS teams (
 
 -- NEW: Members table
 CREATE TABLE IF NOT EXISTS members (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    name       TEXT NOT NULL,
-    email      TEXT,
-    role       TEXT DEFAULT 'member',
-    team_id    INTEGER REFERENCES teams(id) ON DELETE SET NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    name        TEXT NOT NULL,
+    email       TEXT,
+    role        TEXT DEFAULT 'member',  -- hod | faculty_coordinator | student_coordinator | lead | member
+    designation TEXT,                   -- display title, e.g. "Associate Professor, CSE"
+    photo_url   TEXT,                   -- direct image URL
+    team_id     INTEGER REFERENCES teams(id) ON DELETE SET NULL,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Migration note: if upgrading an existing DB run:
+--   ALTER TABLE members ADD COLUMN designation TEXT;
+--   ALTER TABLE members ADD COLUMN photo_url TEXT;
 
 -- ── Seed Data ──────────────────────────────────────────
 

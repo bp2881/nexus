@@ -16,7 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $location = trim($_POST['location']    ?? '');
     $category = trim($_POST['category']    ?? 'general');
 
-    if (!$title || !$date) {
+    if ($action === 'delete') {
+        db_execute("DELETE FROM events WHERE id=?", [(int)($_POST['id'] ?? 0)]);
+        $msg = 'Event deleted.'; $action = '';
+    } elseif (!$title || !$date) {
         $err = 'Title and date are required.';
     } elseif ($action === 'create') {
         db_execute("INSERT INTO events (title,description,event_date,event_time,location,category) VALUES (?,?,?,?,?,?)",
@@ -27,9 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         db_execute("UPDATE events SET title=?,description=?,event_date=?,event_time=?,location=?,category=? WHERE id=?",
             [$title,$desc,$date,$time,$location,$category,$id]);
         $msg = 'Event updated.'; $action = '';
-    } elseif ($action === 'delete') {
-        db_execute("DELETE FROM events WHERE id=?", [(int)($_POST['id'] ?? 0)]);
-        $msg = 'Event deleted.'; $action = '';
     }
 }
 

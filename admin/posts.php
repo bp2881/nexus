@@ -13,17 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $author   = trim($_POST['author']   ?? 'Admin');
     $category = trim($_POST['category'] ?? 'general');
 
-    if (!$title) { $err = 'Title is required.'; }
-    elseif ($action === 'create') {
+    if ($action === 'delete') {
+        db_execute("DELETE FROM blog_posts WHERE id=?", [(int)($_POST['id'] ?? 0)]);
+        $msg = '✅ Post deleted.'; $action = '';
+    } elseif (!$title) {
+        $err = 'Title is required.';
+    } elseif ($action === 'create') {
         db_execute("INSERT INTO blog_posts (title,content,author,category) VALUES (?,?,?,?)", [$title,$content,$author,$category]);
         $msg = '✅ Post published.'; $action = '';
     } elseif ($action === 'edit') {
         $id = (int)($_POST['id'] ?? 0);
         db_execute("UPDATE blog_posts SET title=?,content=?,author=?,category=? WHERE id=?", [$title,$content,$author,$category,$id]);
         $msg = '✅ Post updated.'; $action = '';
-    } elseif ($action === 'delete') {
-        db_execute("DELETE FROM blog_posts WHERE id=?", [(int)($_POST['id'] ?? 0)]);
-        $msg = '✅ Post deleted.'; $action = '';
     }
 }
 
