@@ -1,6 +1,6 @@
 <?php
 // admin/auth.php
-// Credentials are read from .env in the project root — never hardcoded here.
+// Credentials are read from environment variables or .env if present.
 
 function _load_env(): void {
     $env = __DIR__ . '/../.env';
@@ -14,8 +14,25 @@ function _load_env(): void {
 }
 _load_env();
 
-function _admin_user(): string { return $_ENV['ADMIN_USER']      ?? 'admin'; }
-function _admin_hash(): string { return $_ENV['ADMIN_PASS_HASH'] ?? '';      }
+function _env(string $key, string $default = ''): string {
+    if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
+        return $_ENV[$key];
+    }
+
+    $v = getenv($key);
+    if ($v !== false && $v !== '') {
+        return $v;
+    }
+
+    if (isset($_SERVER[$key]) && $_SERVER[$key] !== '') {
+        return $_SERVER[$key];
+    }
+
+    return $default;
+}
+
+function _admin_user(): string { return _env('ADMIN_USER', 'admin'); }
+function _admin_hash(): string { return _env('ADMIN_PASS_HASH', ''); }
 
 function require_login(): void {
     if (session_status() === PHP_SESSION_NONE) session_start();
@@ -44,3 +61,4 @@ function is_logged_in(): bool {
     if (session_status() === PHP_SESSION_NONE) session_start();
     return !empty($_SESSION['admin_logged_in']);
 }
+?>
