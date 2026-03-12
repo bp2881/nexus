@@ -28,12 +28,9 @@ $albums = db_query("SELECT * FROM gallery_albums ORDER BY created_at DESC");
         $thumb_src = !empty($a['thumbnail']) ? '/assets/uploads/gallery/' . htmlspecialchars($a['thumbnail']) : '';
     ?>
     <div style="background:white;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;
-                box-shadow:var(--shadow-sm);transition:box-shadow .2s,transform .2s;
-                <?= $has_drive ? 'cursor:pointer;' : '' ?>"
-         <?= $has_drive
-             ? 'onclick="window.open(\''.htmlspecialchars($a['drive_folder_url'], ENT_QUOTES).'\',\'_blank\')"'
-             : '' ?>
-         onmouseover="<?= $has_drive ? "this.style.boxShadow='var(--shadow)';this.style.transform='translateY(-4px)'" : '' ?>"
+                box-shadow:var(--shadow-sm);transition:box-shadow .2s,transform .2s; cursor:pointer;"
+         onclick="window.location.href='gallery_event.php?id=<?= $a['id'] ?>'"
+         onmouseover="this.style.boxShadow='var(--shadow)';this.style.transform='translateY(-4px)'"
          onmouseout="this.style.boxShadow='var(--shadow-sm)';this.style.transform=''">
 
         <!-- Thumbnail -->
@@ -66,14 +63,12 @@ $albums = db_query("SELECT * FROM gallery_albums ORDER BY created_at DESC");
                 <?php endif; ?>
             </div>
 
-            <!-- "View photos" badge (only if drive link exists) -->
-            <?php if ($has_drive): ?>
+            <!-- "View photos" badge -->
             <div style="position:absolute;top:.65rem;right:.65rem;background:rgba(255,255,255,.9);backdrop-filter:blur(4px);
                         border-radius:100px;padding:.28rem .7rem;display:flex;align-items:center;gap:.3rem;
                         font-size:.72rem;font-weight:700;color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.15);">
-                <span class="msi" style="font-size:15px">open_in_new</span>View Photos
+                <span class="msi" style="font-size:15px">arrow_forward</span>View Gallery
             </div>
-            <?php endif; ?>
         </div>
 
         <!-- Card footer -->
@@ -84,10 +79,8 @@ $albums = db_query("SELECT * FROM gallery_albums ORDER BY created_at DESC");
             </div>
             <?php if ($has_drive): ?>
             <div style="font-size:.72rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:.25rem;">
-                <span class="msi" style="font-size:14px">folder_open</span>Google Drive
+                <span class="msi" style="font-size:14px">folder_open</span>Drive Link
             </div>
-            <?php else: ?>
-            <div style="font-size:.72rem;color:var(--text-dim);">Coming soon</div>
             <?php endif; ?>
         </div>
     </div>

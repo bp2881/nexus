@@ -57,6 +57,13 @@ CREATE TABLE IF NOT EXISTS gallery_albums (
     created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS gallery_highlights (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    album_id   INTEGER REFERENCES gallery_albums(id) ON DELETE CASCADE,
+    photo_url  TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS contact_requests (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     name         TEXT NOT NULL,

@@ -109,7 +109,10 @@ require_once __DIR__ . '/partials/header.php';
 <div class="table-wrap">
     <div class="table-toolbar">
         <span class="table-toolbar-title"><?= count($materials) ?> Resources</span>
-        <input type="text" class="table-search" placeholder="Search materials…" data-target="#mat-tbody">
+        <div style="display:flex;gap:0.5rem;">
+            <input type="text" class="table-search" placeholder="Search materials…" data-target="#mat-tbody">
+            <button class="btn btn-outline" onclick="exportTableToCSV('materials.csv')"><span class="msi">download</span>Export</button>
+        </div>
     </div>
     <?php if (empty($materials)): ?>
     <div class="empty-state"><div class="empty-icon"><span class="msi" style="font-size:2.5rem">menu_book</span></div><p>No materials yet. <a href="?action=new" style="color:var(--primary)">Add one →</a></p></div>

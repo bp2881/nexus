@@ -58,46 +58,7 @@ require_once __DIR__ . '/partials/header.php';
 <?php if ($msg): ?><div class="alert alert-success"><span class="msi">check_circle</span><?= htmlspecialchars($msg) ?></div><?php endif; ?>
 <?php if ($err): ?><div class="alert alert-error"><span class="msi">error</span><?= htmlspecialchars($err) ?></div><?php endif; ?>
 
-<!-- LEADERBOARD CARDS -->
-<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;">
-    <?php foreach ($teams as $i => $t):
-        $pct = $max_pts > 0 ? round(($t['points'] / $max_pts) * 100) : 0;
-        $is_top = $i === 0;
-    ?>
-    <div class="stat-card" style="<?= $is_top ? 'border-color:var(--accent);box-shadow:0 4px 20px rgba(245,158,11,0.15);' : '' ?>">
-        <div class="stat-card-top">
-            <div class="stat-card-icon" style="background:<?= $is_top ? 'var(--accent-light)' : 'var(--primary-light)' ?>;color:<?= $is_top ? 'var(--accent)' : 'var(--primary)' ?>;">
-                <span class="msi"><?= $is_top ? 'emoji_events' : 'groups' ?></span>
-            </div>
-            <?php if ($is_top): ?><span class="badge badge-amber">🏆 Leader</span><?php endif; ?>
-        </div>
-        <div class="stat-card-num" style="color:<?= $is_top ? 'var(--accent)' : 'var(--text)' ?>"><?= $t['points'] ?></div>
-        <div class="stat-card-label">pts · <?= $t['member_count'] ?> member<?= $t['member_count'] != 1 ? 's' : '' ?></div>
-        <div style="margin-top:0.5rem;font-weight:700;font-size:0.875rem;">Team <?= $t['team_no'] ?> — <?= htmlspecialchars($t['team_name']) ?></div>
-        <!-- Progress bar -->
-        <div style="margin-top:0.75rem;background:var(--surface2);border-radius:100px;height:5px;overflow:hidden;">
-            <div style="width:<?= $pct ?>%;height:100%;background:<?= $is_top ? 'var(--accent)' : 'var(--primary)' ?>;border-radius:100px;transition:width 0.5s;"></div>
-        </div>
-        <!-- Quick points buttons -->
-        <div style="display:flex;gap:0.4rem;margin-top:0.75rem;flex-wrap:wrap;">
-            <?php foreach ([5,10,25] as $pts): ?>
-            <form method="POST" style="display:inline;">
-                <input type="hidden" name="action" value="add_points">
-                <input type="hidden" name="id"     value="<?= $t['id'] ?>">
-                <input type="hidden" name="delta"  value="<?= $pts ?>">
-                <button type="submit" class="btn btn-success btn-sm" style="padding:0.25rem 0.5rem;font-size:0.68rem;">+<?= $pts ?></button>
-            </form>
-            <?php endforeach; ?>
-            <form method="POST" style="display:inline;">
-                <input type="hidden" name="action" value="add_points">
-                <input type="hidden" name="id"     value="<?= $t['id'] ?>">
-                <input type="hidden" name="delta"  value="-10">
-                <button type="submit" class="btn btn-danger btn-sm" style="padding:0.25rem 0.5rem;font-size:0.68rem;">-10</button>
-            </form>
-        </div>
-    </div>
-    <?php endforeach; ?>
-</div>
+<!-- Quick Add Leaderboard Cards Removed per user request -->
 
 <?php if ($show_form): ?>
 <div class="form-panel">
@@ -136,7 +97,10 @@ require_once __DIR__ . '/partials/header.php';
 <div class="table-wrap">
     <div class="table-toolbar">
         <span class="table-toolbar-title"><?= count($teams) ?> Teams</span>
-        <input type="text" class="table-search" placeholder="Search teams…" data-target="#teams-tbody">
+        <div style="display:flex;gap:0.5rem;">
+            <input type="text" class="table-search" placeholder="Search by team name or number…" data-target="#teams-tbody">
+            <button class="btn btn-outline" onclick="exportTableToCSV('teams.csv')"><span class="msi">download</span>Export</button>
+        </div>
     </div>
     <?php if (empty($teams)): ?>
     <div class="empty-state"><div class="empty-icon"><span class="msi" style="font-size:2.5rem">groups</span></div><p>No teams yet.</p></div>

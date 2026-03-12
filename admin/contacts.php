@@ -26,7 +26,10 @@ require_once __DIR__ . '/partials/header.php';
 <div class="table-wrap">
     <div class="table-toolbar">
         <span class="table-toolbar-title">All Submissions</span>
-        <input type="text" class="table-search" placeholder="Search…" data-target="#contacts-tbody">
+        <div style="display:flex;gap:0.5rem;">
+            <input type="text" class="table-search" placeholder="Search…" data-target="#contacts-tbody">
+            <button class="btn btn-outline" onclick="exportTableToCSV('contacts.csv')"><span class="msi">download</span>Export</button>
+        </div>
     </div>
     <?php if (empty($contacts)): ?>
     <div class="empty-state"><div class="empty-icon"><span class="msi" style="font-size:2.5rem">mark_email_unread</span></div><p>No contact requests yet.</p></div>

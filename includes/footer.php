@@ -9,6 +9,13 @@
             <p>A student-run tech club where curious minds build real things, learn fast, and grow together.</p>
         </div>
         <div class="footer-col">
+            <h4>Contact Us</h4>
+            <ul style="color:var(--text-dim);line-height:1.8;">
+                <li><span class="msi" style="font-size:16px;vertical-align:middle;margin-right:0.4rem;">call</span> +91 98765 43210</li>
+                <li><span class="msi" style="font-size:16px;vertical-align:middle;margin-right:0.4rem;">mail</span> contact@nexusclub.in</li>
+            </ul>
+        </div>
+        <div class="footer-col" style="flex:0.7">
             <h4>Navigate</h4>
             <ul>
                 <li><a href="/index.php">Home</a></li>

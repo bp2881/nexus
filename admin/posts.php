@@ -88,7 +88,10 @@ require_once __DIR__ . '/partials/header.php';
 <div class="table-wrap">
     <div class="table-toolbar">
         <span class="table-toolbar-title"><?= count($posts) ?> Posts</span>
-        <input type="text" class="table-search" placeholder="Search posts…" data-target="#posts-tbody">
+        <div style="display:flex;gap:0.5rem;">
+            <input type="text" class="table-search" placeholder="Search posts…" data-target="#posts-tbody">
+            <button class="btn btn-outline" onclick="exportTableToCSV('posts.csv')"><span class="msi">download</span>Export</button>
+        </div>
     </div>
     <?php if (empty($posts)): ?>
     <div class="empty-state"><div class="empty-icon"><span class="msi" style="font-size:2.5rem">article</span></div><p>No posts yet.</p></div>

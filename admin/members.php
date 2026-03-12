@@ -58,9 +58,10 @@ require_once __DIR__ . '/partials/header.php';
     <div style="display:flex; gap:0.75rem;">
         <div class="search-container" style="position:relative;">
             <span class="msi" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-dim); font-size:18px;">search</span>
-            <input type="text" id="memberSearch" class="form-input" placeholder="Search by name..." style="padding-left:40px; width:260px; height:42px;">
+            <input type="text" id="memberSearch" class="form-input" placeholder="Search by name or team..." style="padding-left:40px; width:260px; height:42px;">
         </div>
-        <a href="?action=new" class="btn btn-primary"><span class="msi">person_add</span>Add Member</a>
+        <button class="btn btn-outline" onclick="exportTableToCSV('members.csv')" style="height:42px;"><span class="msi">download</span>Export</button>
+        <a href="?action=new" class="btn btn-primary" style="height:42px;"><span class="msi">person_add</span>Add Member</a>
     </div>
 </div>
 
@@ -120,7 +121,7 @@ require_once __DIR__ . '/partials/header.php';
         </thead>
         <tbody id="members-tbody">
         <?php foreach ($members as $m): ?>
-        <tr class="member-row" data-name="<?= strtolower($m['name']) ?>">
+        <tr class="member-row" data-name="<?= strtolower($m['name']) ?>" data-team="<?= strtolower($m['team_name'] ?? '') ?>" data-team-no="<?= strtolower($m['team_no'] ?? '') ?>">
             <td>
                 <div style="display:flex; align-items:center; gap:0.75rem;">
                     <div style="width:36px; height:36px; border-radius:8px; background:var(--primary-light); color:var(--primary); display:grid; place-items:center; font-weight:700;">
@@ -164,14 +165,17 @@ require_once __DIR__ . '/partials/header.php';
 </div>
 
 <script>
-// Simple real-time search filtering
-document.getElementById('memberSearch').addEventListener('keyup', function() {
+// Real-time search by name or team
+document.getElementById('memberSearch').addEventListener('input', function() {
     let filter = this.value.toLowerCase();
     let rows = document.querySelectorAll('.member-row');
     
     rows.forEach(row => {
-        let name = row.getAttribute('data-name');
-        row.style.display = name.includes(filter) ? '' : 'none';
+        let name = row.getAttribute('data-name') || '';
+        let teamName = row.getAttribute('data-team') || '';
+        let teamNo = row.getAttribute('data-team-no') || '';
+        let match = name.includes(filter) || teamName.includes(filter) || ('team ' + teamNo).includes(filter) || teamNo.includes(filter);
+        row.style.display = match ? '' : 'none';
     });
 });
 </script>

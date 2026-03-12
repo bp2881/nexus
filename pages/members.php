@@ -31,118 +31,80 @@ function avatar(array $m, int $size = 96): string {
         <div class="eyebrow"><span class="msi" style="font-size:14px">group</span>Our People</div>
         <h1>Meet the Team</h1>
         <p>The faculty and students who make Nexus run.</p>
+        
+        <div style="margin-top:2rem; max-width:400px; margin-inline:auto; position:relative;">
+            <span class="msi" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--text-dim);">search</span>
+            <input type="text" id="memberSearch" placeholder="Search members..." style="width:100%; padding:0.8rem 1rem 0.8rem 2.8rem; border-radius:100px; border:1px solid var(--border); background:white; font-size:1rem; outline:none; box-shadow:var(--shadow-sm); color:var(--text);">
+        </div>
     </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
-     HOD
+     HOD (DUMMY)
 ════════════════════════════════════════════════════════════ -->
-<?php if (!empty($hod)): ?>
-<section class="section" style="padding-bottom:0;">
-    <div style="text-align:center;margin-bottom:2.5rem;">
-        <div class="eyebrow" style="justify-content:center;"><span class="msi" style="font-size:14px">school</span>Head of Department</div>
-        <h2 style="font-size:1.75rem;font-weight:800;margin-top:.4rem;">HOD</h2>
+<section class="section" style="padding-bottom:1rem;">
+    <div style="margin-bottom:2rem;">
+        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;">
+            Head of Department
+            <div style="height:1px;background:var(--border);flex:1;margin-left:1rem;"></div>
+        </h2>
     </div>
-    <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;">
-        <?php foreach ($hod as $m): ?>
-        <div style="text-align:center;max-width:240px;">
-            <div style="display:flex;justify-content:center;margin-bottom:1rem;">
-                <?= avatar($m, 120) ?>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem; max-width:320px;">
+        <div class="member-card dummy-card" data-name="hod dummy name" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);">
+            <img src="https://ui-avatars.com/api/?name=HOD+Name&background=random&size=400" style="width:100%;height:100%;object-fit:cover;">
+            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
+                <div style="color:white;font-weight:900;font-style:italic;font-size:1.1rem;text-transform:uppercase;margin-bottom:0.1rem;">Dr. HOD Name</div>
+                <div style="color:#fbbf24;font-weight:800;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Head of Department, CSE</div>
             </div>
-            <div style="font-size:1.2rem;font-weight:800;margin-bottom:.3rem;"><?= htmlspecialchars($m['name']) ?></div>
-            <?php if (!empty($m['designation'])): ?>
-            <div style="font-size:.82rem;color:var(--text-mid);margin-bottom:.4rem;"><?= htmlspecialchars($m['designation']) ?></div>
-            <?php endif; ?>
-            <span style="display:inline-block;padding:.25rem .75rem;border-radius:100px;background:var(--primary-light);color:var(--primary);font-size:.72rem;font-weight:700;">Head of Department</span>
-            <?php if (!empty($m['email'])): ?>
-            <div style="margin-top:.5rem;"><a href="mailto:<?= htmlspecialchars($m['email']) ?>" style="font-size:.78rem;color:var(--primary);text-decoration:none;">✉ <?= htmlspecialchars($m['email']) ?></a></div>
-            <?php endif; ?>
         </div>
-        <?php endforeach; ?>
     </div>
 </section>
-
-<!-- divider -->
-<div style="display:flex;align-items:center;gap:1rem;max-width:600px;margin:2.5rem auto;">
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-    <span class="msi" style="color:var(--border);font-size:20px">keyboard_arrow_down</span>
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-</div>
-<?php endif; ?>
 
 <!-- ══════════════════════════════════════════════════════════
-     FACULTY COORDINATORS
+     FACULTY COORDINATORS (DUMMY)
 ════════════════════════════════════════════════════════════ -->
-<?php if (!empty($faculty)): ?>
-<section class="section" style="padding-top:0;padding-bottom:0;">
-    <div style="text-align:center;margin-bottom:2rem;">
-        <div class="eyebrow" style="justify-content:center;"><span class="msi" style="font-size:14px">person_check</span>Faculty</div>
-        <h2 style="font-size:1.4rem;font-weight:800;margin-top:.4rem;">Faculty Coordinators</h2>
+<section class="section" style="padding-top:1rem;padding-bottom:1rem;">
+    <div style="margin-bottom:2rem;">
+        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;">
+            Faculty Coordinators
+            <div style="height:1px;background:var(--border);flex:1;margin-left:1rem;"></div>
+        </h2>
     </div>
-    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;">
-        <?php foreach ($faculty as $m): ?>
-        <div style="text-align:center;background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem 1.75rem;max-width:200px;box-shadow:var(--shadow-sm);transition:box-shadow .18s,transform .18s;"
-             onmouseover="this.style.boxShadow='var(--shadow)';this.style.transform='translateY(-3px)'"
-             onmouseout="this.style.boxShadow='var(--shadow-sm)';this.style.transform=''">
-            <div style="display:flex;justify-content:center;margin-bottom:.85rem;">
-                <?= avatar($m, 80) ?>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem;">
+        <?php for($i=1; $i<=3; $i++): ?>
+        <div class="member-card dummy-card" data-name="faculty name <?= $i ?>" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);">
+            <img src="https://ui-avatars.com/api/?name=Faculty+<?= $i ?>&background=random&size=400" style="width:100%;height:100%;object-fit:cover;">
+            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
+                <div style="color:white;font-weight:900;font-style:italic;font-size:1.1rem;text-transform:uppercase;margin-bottom:0.1rem;">Mr. Faculty Name <?= $i ?></div>
+                <div style="color:#fbbf24;font-weight:800;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Assistant Professor</div>
             </div>
-            <div style="font-weight:800;font-size:.95rem;margin-bottom:.25rem;"><?= htmlspecialchars($m['name']) ?></div>
-            <?php if (!empty($m['designation'])): ?>
-            <div style="font-size:.75rem;color:var(--text-mid);margin-bottom:.4rem;"><?= htmlspecialchars($m['designation']) ?></div>
-            <?php endif; ?>
-            <span style="display:inline-block;padding:.2rem .6rem;border-radius:100px;background:#f0fdf4;color:#16a34a;font-size:.68rem;font-weight:700;">Faculty Coordinator</span>
-            <?php if (!empty($m['email'])): ?>
-            <div style="margin-top:.45rem;"><a href="mailto:<?= htmlspecialchars($m['email']) ?>" style="font-size:.72rem;color:var(--primary);">✉ <?= htmlspecialchars($m['email']) ?></a></div>
-            <?php endif; ?>
         </div>
-        <?php endforeach; ?>
+        <?php endfor; ?>
     </div>
 </section>
-
-<div style="display:flex;align-items:center;gap:1rem;max-width:600px;margin:2.5rem auto;">
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-    <span class="msi" style="color:var(--border);font-size:20px">keyboard_arrow_down</span>
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-</div>
-<?php endif; ?>
 
 <!-- ══════════════════════════════════════════════════════════
-     STUDENT COORDINATORS
+     STUDENT COORDINATORS (DUMMY)
 ════════════════════════════════════════════════════════════ -->
-<?php if (!empty($student_coords)): ?>
-<section class="section" style="padding-top:0;padding-bottom:0;">
-    <div style="text-align:center;margin-bottom:2rem;">
-        <div class="eyebrow" style="justify-content:center;"><span class="msi" style="font-size:14px">star</span>Student Leadership</div>
-        <h2 style="font-size:1.4rem;font-weight:800;margin-top:.4rem;">Student Coordinators</h2>
+<section class="section" style="padding-top:1rem;padding-bottom:1rem;">
+    <div style="margin-bottom:2rem;">
+        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;">
+            Student Leads & Coordinators
+            <div style="height:1px;background:var(--border);flex:1;margin-left:1rem;"></div>
+        </h2>
     </div>
-    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;">
-        <?php foreach ($student_coords as $m): ?>
-        <div style="text-align:center;background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem 1.75rem;max-width:200px;box-shadow:var(--shadow-sm);transition:box-shadow .18s,transform .18s;"
-             onmouseover="this.style.boxShadow='var(--shadow)';this.style.transform='translateY(-3px)'"
-             onmouseout="this.style.boxShadow='var(--shadow-sm)';this.style.transform=''">
-            <div style="display:flex;justify-content:center;margin-bottom:.85rem;">
-                <?= avatar($m, 80) ?>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem;">
+        <?php for($i=1; $i<=4; $i++): ?>
+        <div class="member-card dummy-card" data-name="student name <?= $i ?>" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);">
+            <img src="https://ui-avatars.com/api/?name=Student+<?= $i ?>&background=random&size=400" style="width:100%;height:100%;object-fit:cover;">
+            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
+                <div style="color:white;font-weight:900;font-style:italic;font-size:1.05rem;text-transform:uppercase;margin-bottom:0.1rem;">Student Name <?= $i ?></div>
+                <div style="color:#fbbf24;font-weight:800;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;">Co-Lead</div>
             </div>
-            <div style="font-weight:800;font-size:.95rem;margin-bottom:.25rem;"><?= htmlspecialchars($m['name']) ?></div>
-            <?php if (!empty($m['designation'])): ?>
-            <div style="font-size:.75rem;color:var(--text-mid);margin-bottom:.4rem;"><?= htmlspecialchars($m['designation']) ?></div>
-            <?php endif; ?>
-            <span style="display:inline-block;padding:.2rem .6rem;border-radius:100px;background:#fdf4ff;color:#7c3aed;font-size:.68rem;font-weight:700;">Student Coordinator</span>
-            <?php if (!empty($m['email'])): ?>
-            <div style="margin-top:.45rem;"><a href="mailto:<?= htmlspecialchars($m['email']) ?>" style="font-size:.72rem;color:var(--primary);">✉ <?= htmlspecialchars($m['email']) ?></a></div>
-            <?php endif; ?>
         </div>
-        <?php endforeach; ?>
+        <?php endfor; ?>
     </div>
 </section>
-
-<div style="display:flex;align-items:center;gap:1rem;max-width:600px;margin:2.5rem auto;">
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-    <span class="msi" style="color:var(--border);font-size:20px">keyboard_arrow_down</span>
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-</div>
-<?php endif; ?>
 
 <!-- ══════════════════════════════════════════════════════════
      CLUB MEMBERS (by team)
@@ -187,12 +149,12 @@ function avatar(array $m, int $size = 96): string {
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:.75rem;">
             <?php foreach ($grp as $m):
                 [$rbg,$rcol] = $role_colors[$m['role']] ?? ['#f1f5f9','#64748b']; ?>
-            <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem;box-shadow:var(--shadow-sm);transition:all .18s;"
+            <div class="member-card" data-name="<?= htmlspecialchars(strtolower($m['name'])) ?>" style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem;box-shadow:var(--shadow-sm);transition:all .18s;"
                  onmouseover="this.style.boxShadow='var(--shadow)';this.style.transform='translateY(-2px)'"
                  onmouseout="this.style.boxShadow='var(--shadow-sm)';this.style.transform=''">
                 <?= avatar($m, 40) ?>
-                <div style="overflow:hidden;">
-                    <div style="font-weight:700;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><?= htmlspecialchars($m['name']) ?></div>
+                <div style="flex:1; overflow:hidden;">
+                    <div style="font-weight:700;font-size:.85rem;line-height:1.2;margin-bottom:0.15rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"><?= htmlspecialchars($m['name']) ?></div>
                     <span style="display:inline-block;margin-top:.2rem;padding:.15rem .5rem;border-radius:100px;background:<?= $rbg ?>;color:<?= $rcol ?>;font-size:.65rem;font-weight:700;"><?= ucfirst($m['role']) ?></span>
                 </div>
             </div>
@@ -211,3 +173,13 @@ function avatar(array $m, int $size = 96): string {
 <?php endif; ?>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
+
+<script>
+document.getElementById('memberSearch').addEventListener('input', function() {
+    let filter = this.value.toLowerCase();
+    document.querySelectorAll('.member-card').forEach(card => {
+        let name = card.dataset.name || '';
+        card.style.display = name.includes(filter) ? '' : 'none';
+    });
+});
+</script>

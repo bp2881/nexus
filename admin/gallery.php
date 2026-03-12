@@ -35,11 +35,19 @@ $action = $_SERVER['REQUEST_METHOD'] === 'POST'
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'delete_album') {
+        $album_id = (int)($_POST['id'] ?? 0);
         // Delete thumbnail file from disk
-        $row = db_query("SELECT thumbnail FROM gallery_albums WHERE id=?", [(int)($_POST['id'] ?? 0)])[0] ?? null;
+        $row = db_query("SELECT thumbnail FROM gallery_albums WHERE id=?", [$album_id])[0] ?? null;
         if ($row && $row['thumbnail'] && file_exists(UPLOAD_DIR . $row['thumbnail']))
             unlink(UPLOAD_DIR . $row['thumbnail']);
-        db_execute("DELETE FROM gallery_albums WHERE id=?", [(int)($_POST['id'] ?? 0)]);
+        
+        // Delete highlights from disk
+        $hls = db_query("SELECT photo_url FROM gallery_highlights WHERE album_id=?", [$album_id]);
+        foreach ($hls as $hl) {
+            if (file_exists(UPLOAD_DIR . $hl['photo_url'])) unlink(UPLOAD_DIR . $hl['photo_url']);
+        }
+        
+        db_execute("DELETE FROM gallery_albums WHERE id=?", [$album_id]);
         $msg = 'Album deleted.'; $action = '';
 
     } elseif ($action === 'save_album') {
@@ -63,12 +71,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 db_execute(
                     "UPDATE gallery_albums SET event_name=?, description=?, thumbnail=?, drive_folder_url=? WHERE id=?",
                     [$name, $desc, $thumb, $folder, $id]);
+                $album_id = $id;
                 $msg = 'Album updated.';
+                
+                // Handle highlight deletions
+                if (!empty($_POST['delete_highlights'])) {
+                    $del_ids = array_map('intval', $_POST['delete_highlights']);
+                    $placeholders = implode(',', array_fill(0, count($del_ids), '?'));
+                    $to_del = db_query("SELECT photo_url FROM gallery_highlights WHERE id IN ($placeholders) AND album_id=?", [...$del_ids, $album_id]);
+                    foreach ($to_del as $td) {
+                        if (file_exists(UPLOAD_DIR . $td['photo_url'])) unlink(UPLOAD_DIR . $td['photo_url']);
+                    }
+                    db_execute("DELETE FROM gallery_highlights WHERE id IN ($placeholders) AND album_id=?", [...$del_ids, $album_id]);
+                }
             } else {
                 db_execute(
                     "INSERT INTO gallery_albums (event_name, description, thumbnail, drive_folder_url) VALUES (?,?,?,?)",
                     [$name, $desc, $new_thumb, $folder]);
+                $album_id = db_query("SELECT id FROM gallery_albums ORDER BY id DESC LIMIT 1")[0]['id'];
                 $msg = 'Album created.';
+            }
+
+            // Handle new highlights
+            if (!empty($_FILES['highlights']['tmp_name'][0])) {
+                $files = $_FILES['highlights'];
+                for ($i = 0; $i < count($files['tmp_name']); $i++) {
+                    if ($files['error'][$i] !== UPLOAD_ERR_OK) continue;
+                    $ext = strtolower(pathinfo($files['name'][$i], PATHINFO_EXTENSION));
+                    if (!in_array($ext, ['jpg','jpeg','png','webp','gif'])) continue;
+                    $hl_name = uniqid('hl_', true) . '.' . $ext;
+                    move_uploaded_file($files['tmp_name'][$i], UPLOAD_DIR . $hl_name);
+                    db_execute("INSERT INTO gallery_highlights (album_id, photo_url) VALUES (?,?)", [$album_id, $hl_name]);
+                }
             }
             $action = '';
         }
@@ -86,7 +120,7 @@ require_once __DIR__ . '/partials/header.php';
 
 <div class="page-header">
     <div><p class="page-eyebrow">Content</p><h1>Gallery</h1></div>
-    <a href="?action=new_album" class="btn btn-primary"><span class="msi">create_new_folder</span>New Album</a>
+        <a href="?action=new_album" class="btn btn-primary"><span class="msi">create_new_folder</span>New Album</a>
 </div>
 
 <?php if ($msg): ?><div class="alert alert-success"><span class="msi">check_circle</span><?= htmlspecialchars($msg) ?></div><?php endif; ?>
@@ -146,6 +180,34 @@ require_once __DIR__ . '/partials/header.php';
                          onerror="this.style.display='none'">
                 </div>
                 <?php endif; ?>
+            </div>
+
+            <!-- Highlights upload -->
+            <div class="form-group-admin" style="margin-top:1.1rem;">
+                <label>Highlight Photos (Multiple)</label>
+                <small style="display:block;color:var(--text-dim);margin-bottom:.45rem;">
+                    Select multiple images from your device. These will form the image gallery on the event page. Max 8MB per file.
+                </small>
+                <input type="file" name="highlights[]" accept="image/jpeg,image/png,image/webp,image/gif" multiple style="display:block;padding:.4rem 0;">
+                
+                <?php if ($edit_item): 
+                    $highlights = db_query("SELECT * FROM gallery_highlights WHERE album_id=?", [$edit_item['id']]);
+                    if (!empty($highlights)):
+                ?>
+                <div style="margin-top:1rem;">
+                    <div style="font-size:.72rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;">Current Highlights (Select to delete upon save)</div>
+                    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        <?php foreach ($highlights as $hl): ?>
+                        <label style="position:relative;width:80px;height:80px;cursor:pointer;">
+                            <img src="<?= UPLOAD_PATH . htmlspecialchars($hl['photo_url']) ?>" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border);">
+                            <div style="position:absolute;top:2px;right:2px;background:rgba(255,255,255,0.8);border-radius:50%;padding:2px;line-height:0;box-shadow:0 1px 3px rgba(0,0,0,0.3);">
+                                <input type="checkbox" name="delete_highlights[]" value="<?= $hl['id'] ?>" style="margin:0;">
+                            </div>
+                        </label>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; endif; ?>
             </div>
 
             <!-- Drive folder link -->

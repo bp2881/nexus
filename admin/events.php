@@ -105,7 +105,10 @@ require_once __DIR__ . '/partials/header.php';
 <div class="table-wrap">
     <div class="table-toolbar">
         <span class="table-toolbar-title"><?= count($events) ?> Events</span>
-        <input type="text" class="table-search" placeholder="Search events…" data-target="#events-tbody">
+        <div style="display:flex;gap:0.5rem;">
+            <input type="text" class="table-search" placeholder="Search events…" data-target="#events-tbody">
+            <button class="btn btn-outline" onclick="exportTableToCSV('events.csv')"><span class="msi">download</span>Export</button>
+        </div>
     </div>
     <?php if (empty($events)): ?>
     <div class="empty-state"><div class="empty-icon"><span class="msi" style="font-size:2.5rem">event_busy</span></div><p>No events yet. <a href="?action=new" style="color:var(--primary)">Add the first one →</a></p></div>
