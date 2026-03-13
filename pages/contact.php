@@ -105,17 +105,6 @@ $prefill_type = $_GET['type'] ?? 'join';
                 </div>
                 <?php endforeach; ?>
             </div>
-
-            <div style="margin-top:1.5rem;padding:1.25rem;background:var(--primary-light);border:1px solid rgba(26,115,232,0.2);border-radius:var(--radius);">
-                <p style="font-size:0.75rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.4rem;">
-                    <span class="msi" style="font-size:16px">location_on</span> Find Us
-                </p>
-                <p style="font-size:0.875rem;color:var(--text-mid);line-height:2;">
-                    📍 CS Department, Room 101<br>
-                    📧 nexus@college.edu<br>
-                    💬 discord.gg/nexus
-                </p>
-            </div>
         </div>
     </div>
 </section>

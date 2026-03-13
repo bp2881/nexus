@@ -22,7 +22,7 @@ $stats = [
         <div class="hero-content">
             <div class="hero-pill">
                 <span class="msi" style="font-size:15px">bolt</span>
-                Student Tech Club · Est. 2023
+                Nexus Club · Est. 2026
             </div>
             <h1>
                 Build. <span class="hi">Learn.</span><br>
