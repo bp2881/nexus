@@ -1,6 +1,6 @@
 <?php // includes/footer.php ?>
 <footer class="site-footer">
-    <div class="footer-inner">
+    <div class="footer-inner" style="grid-template-columns: 2fr 1.2fr 1fr 1fr;">
         <div class="footer-brand">
             <div class="footer-logo">
                 <div class="nav-logo-icon"><img src="/assets/images/nexus.png" alt="NX"></div>

@@ -10,6 +10,7 @@ $stats = [
     'events'    => db_query_cached("SELECT COUNT(*) c FROM events")[0]['c'],
     'projects'  => db_query_cached("SELECT COUNT(*) c FROM projects")[0]['c'],
     'materials' => db_query_cached("SELECT COUNT(*) c FROM materials")[0]['c'],
+    'members'   => db_query_cached("SELECT COUNT(*) c FROM members")[0]['c'],
 ];
 ?>
 
@@ -72,7 +73,7 @@ $stats = [
     <div class="stats-strip-inner">
         <div class="stat-block">
             <div class="stat-icon"><span class="msi">group</span></div>
-            <div class="stat-num">120+</div>
+            <div class="stat-num"><?= $stats['members'] ?>+</div>
             <div class="stat-label">Active Members</div>
         </div>
         <div class="stat-block">

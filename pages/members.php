@@ -32,9 +32,12 @@ function avatar(array $m, int $size = 96): string {
         <h1>Meet the Team</h1>
         <p>The faculty and students who make Nexus run.</p>
         
-        <div style="margin-top:2rem; max-width:400px; margin-inline:auto; position:relative;">
-            <span class="msi" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--text-dim);">search</span>
-            <input type="text" id="memberSearch" placeholder="Search members..." style="width:100%; padding:0.8rem 1rem 0.8rem 2.8rem; border-radius:100px; border:1px solid var(--border); background:white; font-size:1rem; outline:none; box-shadow:var(--shadow-sm); color:var(--text);">
+        <div style="margin-top:2rem; max-width:400px; margin-inline:auto; text-align:center;">
+            <button id="openMemberSearchBtn" style="width:100%; padding:0.8rem 1rem 0.8rem 1.5rem; text-align:left; border-radius:100px; border:1px solid var(--border); background:white; font-size:1rem; outline:none; box-shadow:var(--shadow-sm); color:var(--text-dim); cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s;">
+                <span class="msi">search</span>
+                <span style="flex:1;">Search members...</span>
+                <span style="background:var(--surface2); padding:0.2rem 0.5rem; border-radius:6px; font-size:0.75rem; font-family:var(--mono); color:var(--text);">Ctrl+K</span>
+            </button>
         </div>
     </div>
 </div>
@@ -52,7 +55,7 @@ function avatar(array $m, int $size = 96): string {
     </div>
     <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;">
         <div class="member-card dummy-card" data-name="hod dummy name" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:280px;">
-            <img src="https://ui-avatars.com/api/?name=HOD+Name&background=random&size=400" style="width:100%;height:100%;object-fit:cover;">
+            <img src="/assets/images/rajavikram.avif" style="width:100%;height:100%;object-fit:cover;">
             <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
                 <div style="color:white;font-weight:900;font-style:italic;font-size:1.1rem;text-transform:uppercase;margin-bottom:0.1rem;">Dr. HOD Name</div>
                 <div style="color:#fbbf24;font-weight:800;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Head of Department, CSE</div>
@@ -74,7 +77,7 @@ function avatar(array $m, int $size = 96): string {
     </div>
     <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;">
         <div class="member-card dummy-card" data-name="faculty name <?= $i ?>" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:260px;">
-            <img src="https://ui-avatars.com/api/?name=Faculty+<?= $i ?>&background=random&size=400" style="width:100%;height:100%;object-fit:cover;">
+            <img src="/assets/images/balaji.avif" style="width:100%;height:100%;object-fit:cover;">
             <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
                 <div style="color:white;font-weight:900;font-style:italic;font-size:1.1rem;text-transform:uppercase;margin-bottom:0.1rem;">Mr. Faculty Name <?= $i ?></div>
                 <div style="color:#fbbf24;font-weight:800;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Assistant Professor</div>
@@ -95,15 +98,27 @@ function avatar(array $m, int $size = 96): string {
         </h2>
     </div>
     <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;">
-        <?php for($i=1; $i<=4; $i++): ?>
-        <div class="member-card dummy-card" data-name="student name <?= $i ?>" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:240px;">
-            <img src="https://ui-avatars.com/api/?name=Student+<?= $i ?>&background=random&size=400" style="width:100%;height:100%;object-fit:cover;">
+        <div class="member-card dummy-card" data-name="student name" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:240px;">
+            <img src="/assets/images/kowshik.avif" style="width:100%;height:100%;object-fit:cover;">
             <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
-                <div style="color:white;font-weight:900;font-style:italic;font-size:1.05rem;text-transform:uppercase;margin-bottom:0.1rem;">Student Name <?= $i ?></div>
+                <div style="color:white;font-weight:900;font-style:italic;font-size:1.05rem;text-transform:uppercase;margin-bottom:0.1rem;">Ghanta Kowshik Kumar</div>
                 <div style="color:#fbbf24;font-weight:800;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;">Co-Lead</div>
             </div>
         </div>
-        <?php endfor; ?>
+        <div class="member-card dummy-card" data-name="student name" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:240px;">
+            <img src="/assets/images/pranav.avif" style="width:100%;height:100%;object-fit:cover;">
+            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
+                <div style="color:white;font-weight:900;font-style:italic;font-size:1.05rem;text-transform:uppercase;margin-bottom:0.1rem;">Pranav Bairy</div>
+                <div style="color:#fbbf24;font-weight:800;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;">Co-Lead</div>
+            </div>
+        </div>
+        <div class="member-card dummy-card" data-name="student name" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:240px;">
+            <img src="/assets/images/devesh.avif" style="width:100%;height:100%;object-fit:cover;">
+            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
+                <div style="color:white;font-weight:900;font-style:italic;font-size:1.05rem;text-transform:uppercase;margin-bottom:0.1rem;">Devesh Rayudu</div>
+                <div style="color:#fbbf24;font-weight:800;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;">Co-Lead</div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -173,14 +188,138 @@ function avatar(array $m, int $size = 96): string {
 </section>
 <?php endif; ?>
 
+<!-- Search Overlay -->
+<div id="searchOverlay" style="position:fixed; inset:0; background:rgba(15,23,42,0.85); backdrop-filter:blur(8px); z-index:9999; display:none; opacity:0; transition:opacity 0.2s;">
+    <div style="max-width:600px; margin:4rem auto 2rem; background:white; border-radius:var(--radius-lg); box-shadow:var(--shadow-xl); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 8rem);">
+        <div style="padding:1rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:1rem;">
+            <span class="msi" style="color:var(--text-mid);">search</span>
+            <input type="text" id="overlayMemberSearch" placeholder="Search members by name..." style="flex:1; border:none; outline:none; font-size:1.1rem; color:var(--text); font-family:var(--font); background:transparent;">
+            <button id="closeMemberSearchBtn" style="background:var(--surface2); border:none; border-radius:6px; padding:0.3rem 0.6rem; font-size:0.75rem; font-weight:700; color:var(--text-mid); cursor:pointer;">ESC</button>
+        </div>
+        <div id="searchResults" style="padding:1rem; overflow-y:auto; flex:1; max-height:450px;">
+            <div id="searchEmptyState" style="text-align:center; padding:3rem 1rem; color:var(--text-dim);">
+                <span class="msi" style="font-size:2.5rem; opacity:0.3; margin-bottom:0.8rem; display:block;">person_search</span>
+                <p>Type a name to search our members.</p>
+            </div>
+            <!-- Search results will inject here -->
+        </div>
+    </div>
+</div>
+
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
 
 <script>
-document.getElementById('memberSearch').addEventListener('input', function() {
-    let filter = this.value.toLowerCase();
-    document.querySelectorAll('.club-member-card').forEach(card => {
-        let name = card.dataset.name || '';
-        card.style.display = name.includes(filter) ? '' : 'none';
+const searchOverlay = document.getElementById('searchOverlay');
+const openSearchBtn = document.getElementById('openMemberSearchBtn');
+const closeSearchBtn = document.getElementById('closeMemberSearchBtn');
+const overlayInput = document.getElementById('overlayMemberSearch');
+const searchResults = document.getElementById('searchResults');
+const searchEmptyState = document.getElementById('searchEmptyState');
+
+const membersList = [
+    <?php
+    foreach ($all as $m) {
+        $initial = htmlspecialchars(strtoupper(mb_substr($m['name'], 0, 1)));
+        $colors  = ['#1a73e8','#16a34a','#7c3aed','#db2777','#f59e0b','#0891b2'];
+        $bg      = $colors[crc32($m['name']) % count($colors)];
+        
+        $roleInfo = ucfirst($m['role']);
+        if ($m['role'] === 'hod') $roleInfo = 'Head of Department';
+        else if ($m['role'] === 'faculty_coordinator') $roleInfo = 'Faculty Coordinator';
+        else if ($m['role'] === 'student_coordinator') $roleInfo = 'Student Coordinator';
+
+        $tName = '';
+        if (!empty($m['team_id'])) {
+            $tName = htmlspecialchars($m['team_name'] . ' (ID: ' . $m['team_no'] . ')');
+        }
+        
+        $avatarHtml = '';
+        if (!empty($m['photo_url'])) {
+            $avatarHtml = '<img src="'.htmlspecialchars($m['photo_url']).'" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">';
+        } else {
+            $avatarHtml = '<div style="width:40px;height:40px;border-radius:50%;background:'.$bg.';color:white;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;">'.$initial.'</div>';
+        }
+
+        echo json_encode([
+            'name' => $m['name'],
+            'role' => $roleInfo,
+            'team' => $tName,
+            'avatar' => $avatarHtml
+        ]) . ",";
+    }
+    ?>
+];
+
+function openSearch() {
+    searchOverlay.style.display = 'block';
+    void searchOverlay.offsetWidth;
+    searchOverlay.style.opacity = '1';
+    overlayInput.value = '';
+    renderResults('');
+    overlayInput.focus();
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSearch() {
+    searchOverlay.style.opacity = '0';
+    setTimeout(() => {
+        searchOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+    }, 200);
+}
+
+openSearchBtn.addEventListener('click', openSearch);
+closeSearchBtn.addEventListener('click', closeSearch);
+searchOverlay.addEventListener('click', e => {
+    if (e.target === searchOverlay) closeSearch();
+});
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && searchOverlay.style.display === 'block') {
+        closeSearch();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearch();
+    }
+});
+
+function renderResults(filter) {
+    if (!filter) {
+        searchResults.innerHTML = '';
+        searchResults.appendChild(searchEmptyState);
+        searchEmptyState.style.display = 'block';
+        return;
+    }
+    
+    filter = filter.toLowerCase();
+    const hits = membersList.filter(m => m.name.toLowerCase().includes(filter) || m.team.toLowerCase().includes(filter));
+    
+    if (hits.length === 0) {
+        searchResults.innerHTML = '<div style="text-align:center; padding:3rem 1rem; color:var(--text-dim);"><p>No members found matching "'+filter+'".</p></div>';
+        return;
+    }
+    
+    let html = '<div style="display:flex; flex-direction:column; gap:0.5rem;">';
+    hits.forEach(m => {
+        html += `
+            <div style="display:flex; align-items:center; gap:1rem; padding:0.75rem 1rem; border-radius:var(--radius-sm); border:1px solid var(--border); transition:background 0.15s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='white'">
+                ${m.avatar}
+                <div style="flex:1;">
+                    <div style="font-weight:700; font-size:0.95rem; color:var(--text);">${m.name}</div>
+                    <div style="font-size:0.75rem; color:var(--text-mid); margin-top:0.2rem; display:flex; align-items:center; gap:0.4rem;">
+                        <span style="background:var(--primary-light); color:var(--primary); padding:0.15rem 0.5rem; border-radius:100px; font-weight:700; font-size:0.65rem;">${m.role}</span>
+                        ${m.team ? '<span style="color:var(--text-dim);">&bull;</span> <span>' + m.team + '</span>' : ''}
+                    </div>
+                </div>
+            </div>
+        `;
     });
+    html += '</div>';
+    searchResults.innerHTML = html;
+}
+
+overlayInput.addEventListener('input', e => {
+    renderResults(e.target.value);
 });
 </script>
