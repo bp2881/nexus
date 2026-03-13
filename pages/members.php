@@ -3,7 +3,7 @@ $page_title = 'Members';
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/header.php';
 
-$all = db_query("SELECT m.*, t.team_name, t.team_no FROM members m LEFT JOIN teams t ON m.team_id=t.id ORDER BY m.created_at ASC");
+$all = db_query_cached("SELECT m.*, t.team_name, t.team_no FROM members m LEFT JOIN teams t ON m.team_id=t.id ORDER BY m.created_at ASC");
 
 // Split by role
 $hod          = array_filter($all, fn($m) => $m['role'] === 'hod');
@@ -44,13 +44,14 @@ function avatar(array $m, int $size = 96): string {
 ════════════════════════════════════════════════════════════ -->
 <section class="section" style="padding-bottom:1rem;">
     <div style="margin-bottom:2rem;">
-        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;">
+        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;justify-content:center;text-align:center;">
+            <div style="height:1px;background:var(--border);flex:1;margin-right:1rem;"></div>
             Head of Department
             <div style="height:1px;background:var(--border);flex:1;margin-left:1rem;"></div>
         </h2>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem; max-width:320px;">
-        <div class="member-card dummy-card" data-name="hod dummy name" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);">
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;">
+        <div class="member-card dummy-card" data-name="hod dummy name" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:280px;">
             <img src="https://ui-avatars.com/api/?name=HOD+Name&background=random&size=400" style="width:100%;height:100%;object-fit:cover;">
             <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
                 <div style="color:white;font-weight:900;font-style:italic;font-size:1.1rem;text-transform:uppercase;margin-bottom:0.1rem;">Dr. HOD Name</div>
@@ -65,21 +66,20 @@ function avatar(array $m, int $size = 96): string {
 ════════════════════════════════════════════════════════════ -->
 <section class="section" style="padding-top:1rem;padding-bottom:1rem;">
     <div style="margin-bottom:2rem;">
-        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;">
+        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;justify-content:center;text-align:center;">
+            <div style="height:1px;background:var(--border);flex:1;margin-right:1rem;"></div>
             Faculty Coordinators
             <div style="height:1px;background:var(--border);flex:1;margin-left:1rem;"></div>
         </h2>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem;">
-        <?php for($i=1; $i<=3; $i++): ?>
-        <div class="member-card dummy-card" data-name="faculty name <?= $i ?>" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);">
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;">
+        <div class="member-card dummy-card" data-name="faculty name <?= $i ?>" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:260px;">
             <img src="https://ui-avatars.com/api/?name=Faculty+<?= $i ?>&background=random&size=400" style="width:100%;height:100%;object-fit:cover;">
             <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
                 <div style="color:white;font-weight:900;font-style:italic;font-size:1.1rem;text-transform:uppercase;margin-bottom:0.1rem;">Mr. Faculty Name <?= $i ?></div>
                 <div style="color:#fbbf24;font-weight:800;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Assistant Professor</div>
             </div>
         </div>
-        <?php endfor; ?>
     </div>
 </section>
 
@@ -88,14 +88,15 @@ function avatar(array $m, int $size = 96): string {
 ════════════════════════════════════════════════════════════ -->
 <section class="section" style="padding-top:1rem;padding-bottom:1rem;">
     <div style="margin-bottom:2rem;">
-        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;">
+        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;justify-content:center;text-align:center;">
+            <div style="height:1px;background:var(--border);flex:1;margin-right:1rem;"></div>
             Student Leads & Coordinators
             <div style="height:1px;background:var(--border);flex:1;margin-left:1rem;"></div>
         </h2>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem;">
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;">
         <?php for($i=1; $i<=4; $i++): ?>
-        <div class="member-card dummy-card" data-name="student name <?= $i ?>" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);">
+        <div class="member-card dummy-card" data-name="student name <?= $i ?>" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:240px;">
             <img src="https://ui-avatars.com/api/?name=Student+<?= $i ?>&background=random&size=400" style="width:100%;height:100%;object-fit:cover;">
             <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
                 <div style="color:white;font-weight:900;font-style:italic;font-size:1.05rem;text-transform:uppercase;margin-bottom:0.1rem;">Student Name <?= $i ?></div>
@@ -123,7 +124,7 @@ function avatar(array $m, int $size = 96): string {
         $key = $m['team_id'] ?? 0;
         $by_team[$key][] = $m;
     }
-    $teams_data = db_query("SELECT * FROM teams ORDER BY team_no");
+    $teams_data = db_query_cached("SELECT * FROM teams ORDER BY team_no");
     $teams_map  = array_column($teams_data, null, 'id');
 
     $role_colors = ['lead'=>['#fffbeb','#f59e0b'],'member'=>['#eff6ff','#1a73e8'],'core'=>['#fdf4ff','#7c3aed']];
@@ -138,7 +139,7 @@ function avatar(array $m, int $size = 96): string {
                 <span class="msi" style="font-size:18px">groups</span>
             </div>
             <div>
-                <span style="font-weight:800;font-size:.95rem;">Team <?= $team['team_no'] ?> — <?= htmlspecialchars($team['team_name']) ?></span>
+                <span style="font-weight:800;font-size:.95rem;"><?= htmlspecialchars($team['team_name']) ?> (ID: <?= htmlspecialchars($team['team_no']) ?>)</span>
                 <span style="font-size:.72rem;color:var(--text-dim);margin-left:.5rem;"><?= count($grp) ?> members</span>
             </div>
         </div>
@@ -149,7 +150,7 @@ function avatar(array $m, int $size = 96): string {
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:.75rem;">
             <?php foreach ($grp as $m):
                 [$rbg,$rcol] = $role_colors[$m['role']] ?? ['#f1f5f9','#64748b']; ?>
-            <div class="member-card" data-name="<?= htmlspecialchars(strtolower($m['name'])) ?>" style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem;box-shadow:var(--shadow-sm);transition:all .18s;"
+            <div class="member-card club-member-card" data-name="<?= htmlspecialchars(strtolower($m['name'])) ?>" style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem;box-shadow:var(--shadow-sm);transition:all .18s;"
                  onmouseover="this.style.boxShadow='var(--shadow)';this.style.transform='translateY(-2px)'"
                  onmouseout="this.style.boxShadow='var(--shadow-sm)';this.style.transform=''">
                 <?= avatar($m, 40) ?>
@@ -177,7 +178,7 @@ function avatar(array $m, int $size = 96): string {
 <script>
 document.getElementById('memberSearch').addEventListener('input', function() {
     let filter = this.value.toLowerCase();
-    document.querySelectorAll('.member-card').forEach(card => {
+    document.querySelectorAll('.club-member-card').forEach(card => {
         let name = card.dataset.name || '';
         card.style.display = name.includes(filter) ? '' : 'none';
     });

@@ -3,13 +3,13 @@ $page_title = 'Home';
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/header.php';
 
-$upcoming_events = db_query("SELECT * FROM events WHERE event_date >= date('now') ORDER BY event_date ASC LIMIT 3");
-$top_projects    = db_query("SELECT * FROM projects WHERE is_top=1 LIMIT 3");
-$recent_posts    = db_query("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT 3");
+$upcoming_events = db_query_cached("SELECT * FROM events WHERE event_date >= date('now') ORDER BY event_date ASC LIMIT 3");
+$top_projects    = db_query_cached("SELECT * FROM projects WHERE is_top=1 LIMIT 3");
+$recent_posts    = db_query_cached("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT 3");
 $stats = [
-    'events'    => db_query("SELECT COUNT(*) c FROM events")[0]['c'],
-    'projects'  => db_query("SELECT COUNT(*) c FROM projects")[0]['c'],
-    'materials' => db_query("SELECT COUNT(*) c FROM materials")[0]['c'],
+    'events'    => db_query_cached("SELECT COUNT(*) c FROM events")[0]['c'],
+    'projects'  => db_query_cached("SELECT COUNT(*) c FROM projects")[0]['c'],
+    'materials' => db_query_cached("SELECT COUNT(*) c FROM materials")[0]['c'],
 ];
 ?>
 

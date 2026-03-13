@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS contact_requests (
 -- NEW: Teams table
 CREATE TABLE IF NOT EXISTS teams (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    team_no    INTEGER NOT NULL UNIQUE,
+    team_no    TEXT NOT NULL UNIQUE,
     team_name  TEXT NOT NULL,
     points     INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -103,15 +103,15 @@ CREATE TABLE IF NOT EXISTS members (
 -- SEEDING TEAMS TABLE
 -- SEEDING TEAMS TABLE
 INSERT INTO teams (team_no, team_name) VALUES
-(1, 'Team 1'), (2, 'Team 2'), (3, 'Team 3'), (4, 'Team 4'), (5, 'Team 5'),
-(6, 'Team 6'), (7, 'Team 7'), (8, 'Team 8'), (9, 'Team 9'), (10, 'Team 10'),
-(11, 'Team 11'), (12, 'Team 12'), (13, 'Team 13'), (14, 'Team 14'), (15, 'Team 15'),
-(16, 'Team 16'), (17, 'Team 17'), (18, 'Team 18'), (19, 'Team 19'), (20, 'Team 20'),
-(21, 'Team 21'), (22, 'Team 22'), (23, 'Team 23'), (24, 'Team 24'), (25, 'Team 25'),
-(26, 'Team 26'), (27, 'Team 27'), (28, 'Team 28'), (29, 'Team 29'), (30, 'Team 30'),
-(31, 'Team 31'), (32, 'Team 32'), (33, 'Team 33'), (34, 'Team 34'), (35, 'Team 35'),
-(36, 'Team 36'), (37, 'Team 37'), (38, 'Team 38'), (39, 'Team 39'), (40, 'Team 40'),
-(41, 'Team 41');
+('NX26101', 'Team NX26101'), ('NX26102', 'Team NX26102'), ('NX26103', 'Team NX26103'), ('NX26104', 'Team NX26104'), ('NX26105', 'Team NX26105'),
+('NX26106', 'Team NX26106'), ('NX26107', 'Team NX26107'), ('NX26108', 'Team NX26108'), ('NX26109', 'Team NX26109'), ('NX26110', 'Team NX26110'),
+('NX26111', 'Team NX26111'), ('NX26112', 'Team NX26112'), ('NX26113', 'Team NX26113'), ('NX26114', 'Team NX26114'), ('NX26115', 'Team NX26115'),
+('NX26116', 'Team NX26116'), ('NX26117', 'Team NX26117'), ('NX26118', 'Team NX26118'), ('NX26119', 'Team NX26119'), ('NX26120', 'Team NX26120'),
+('NX26121', 'Team NX26121'), ('NX26122', 'Team NX26122'), ('NX26123', 'Team NX26123'), ('NX26124', 'Team NX26124'), ('NX26125', 'Team NX26125'),
+('NX26126', 'Team NX26126'), ('NX26127', 'Team NX26127'), ('NX26128', 'Team NX26128'), ('NX26129', 'Team NX26129'), ('NX26130', 'Team NX26130'),
+('NX26131', 'Team NX26131'), ('NX26132', 'Team NX26132'), ('NX26133', 'Team NX26133'), ('NX26134', 'Team NX26134'), ('NX26135', 'Team NX26135'),
+('NX26136', 'Team NX26136'), ('NX26137', 'Team NX26137'), ('NX26138', 'Team NX26138'), ('NX26139', 'Team NX26139'), ('NX26140', 'Team NX26140'),
+('NX26141', 'Team NX26141');
 
 -- SEEDING MEMBERS TABLE (Leads & Members)
 -- Role 'lead' is assigned to the Team Head column with provided emails.

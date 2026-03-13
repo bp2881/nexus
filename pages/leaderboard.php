@@ -3,7 +3,7 @@ $page_title = 'Leaderboard';
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/header.php';
 
-$teams   = db_query("SELECT t.*, COUNT(m.id) as member_count FROM teams t LEFT JOIN members m ON m.team_id=t.id GROUP BY t.id ORDER BY t.points DESC");
+$teams   = db_query_cached("SELECT t.*, COUNT(m.id) as member_count FROM teams t LEFT JOIN members m ON m.team_id=t.id GROUP BY t.id ORDER BY t.points DESC");
 $max_pts = !empty($teams) ? max(array_column($teams, 'points')) : 1;
 $palette = [
     ['#f59e0b','#fffbeb','rgba(245,158,11,0.18)'],
@@ -46,7 +46,7 @@ $palette = [
             </div>
             <div style="font-size:1.4rem;margin-bottom:0.2rem;"><?= $medals[$place] ?></div>
             <div style="font-weight:800;font-size:0.88rem;margin-bottom:0.15rem;"><?= htmlspecialchars($t['team_name']) ?></div>
-            <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.5rem;">Team <?= $t['team_no'] ?></div>
+            <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.5rem;"><?= htmlspecialchars($t['team_no']) ?></div>
             <div style="height:<?= $h ?>;background:<?= $bg ?>;border:2px solid <?= $col ?>22;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 8px 28px <?= $shadow ?>;">
                 <div style="font-size:2rem;font-weight:900;color:<?= $col ?>;line-height:1;"><?= $t['points'] ?></div>
                 <div style="font-size:0.65rem;color:var(--text-dim);font-weight:700;letter-spacing:.08em;text-transform:uppercase;">pts</div>
@@ -69,7 +69,7 @@ $palette = [
                 <?= $i < 3 ? $ranks[$i] : '#'.($i+1) ?>
             </div>
             <div>
-                <div style="font-weight:700;font-size:0.95rem;"><?= htmlspecialchars($t['team_name']) ?> <span style="font-size:0.72rem;color:var(--text-dim);font-weight:400;">· Team <?= $t['team_no'] ?></span></div>
+                <div style="font-weight:700;font-size:0.95rem;"><?= htmlspecialchars($t['team_name']) ?> <span style="font-size:0.72rem;color:var(--text-dim);font-weight:400;">· ID: <?= htmlspecialchars($t['team_no']) ?></span></div>
                 <div style="margin-top:0.35rem;height:5px;background:var(--surface2);border-radius:100px;overflow:hidden;width:180px;max-width:100%;">
                     <div style="width:<?= $pct ?>%;height:100%;background:<?= $col ?>;border-radius:100px;"></div>
                 </div>

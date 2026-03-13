@@ -95,7 +95,7 @@ require_once __DIR__ . '/partials/header.php';
                     <select name="team_id">
                         <option value="">— Unassigned —</option>
                         <?php foreach ($teams as $t): ?>
-                            <option value="<?= $t['id'] ?>" <?= ($edit_item['team_id'] ?? null) == $t['id'] ? 'selected' : '' ?>>Team <?= $t['team_no'] ?>: <?= htmlspecialchars($t['team_name']) ?></option>
+                            <option value="<?= $t['id'] ?>" <?= ($edit_item['team_id'] ?? null) == $t['id'] ? 'selected' : '' ?>><?= htmlspecialchars($t['team_name']) ?> (<?= htmlspecialchars($t['team_no']) ?>)</option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -131,7 +131,7 @@ require_once __DIR__ . '/partials/header.php';
                         <div class="td-title" style="font-weight:600;"><?= htmlspecialchars($m['name']) ?></div>
                         <div style="font-size:0.75rem; color:var(--primary); font-weight:500;">
                             <?php if ($m['team_no']): ?>
-                                Team <?= $m['team_no'] ?> — <?= htmlspecialchars($m['team_name']) ?>
+                                <?= htmlspecialchars($m['team_name']) ?> (ID: <?= htmlspecialchars($m['team_no']) ?>)
                             <?php else: ?>
                                 <span style="color:var(--text-dim);">No Team Assigned</span>
                             <?php endif; ?>

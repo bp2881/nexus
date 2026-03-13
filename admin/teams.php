@@ -9,7 +9,7 @@ $action = $_SERVER['REQUEST_METHOD'] === 'POST' ? ($_POST['action'] ?? '') : ($_
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'create') {
-        $team_no   = (int)($_POST['team_no']   ?? 0);
+        $team_no   = trim($_POST['team_no']   ?? '');
         $team_name = trim($_POST['team_name']  ?? '');
         $points    = (int)($_POST['points']    ?? 0);
         if (!$team_no || !$team_name) { $err = 'Team number and name are required.'; }
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif ($action === 'edit') {
         $id        = (int)($_POST['id']        ?? 0);
-        $team_no   = (int)($_POST['team_no']   ?? 0);
+        $team_no   = trim($_POST['team_no']   ?? '');
         $team_name = trim($_POST['team_name']  ?? '');
         $points    = (int)($_POST['points']    ?? 0);
         if (!$team_no || !$team_name) { $err = 'Team number and name are required.'; }
@@ -73,7 +73,7 @@ require_once __DIR__ . '/partials/header.php';
             <div class="form-grid form-grid-2">
                 <div class="form-group-admin">
                     <label>Team Number *</label>
-                    <input type="number" name="team_no" required min="1" value="<?= htmlspecialchars($edit_item['team_no'] ?? '') ?>" placeholder="e.g. 1">
+                    <input type="text" name="team_no" required value="<?= htmlspecialchars($edit_item['team_no'] ?? '') ?>" placeholder="e.g. NX26101">
                 </div>
                 <div class="form-group-admin">
                     <label>Team Name *</label>
