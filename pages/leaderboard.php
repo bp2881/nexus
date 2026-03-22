@@ -5,227 +5,143 @@ require_once __DIR__ . '/../includes/header.php';
 
 $teams   = db_query_cached("SELECT t.*, COUNT(m.id) as member_count FROM teams t LEFT JOIN members m ON m.team_id=t.id GROUP BY t.id ORDER BY t.points DESC");
 $max_pts = !empty($teams) ? max(array_column($teams, 'points')) : 1;
-$palette = [
-    ['#f59e0b','#fffbeb','rgba(245,158,11,0.18)'],
-    ['#1a73e8','#eff6ff','rgba(26,115,232,0.12)'],
-    ['#16a34a','#f0fdf4','rgba(22,163,74,0.12)'],
-    ['#7c3aed','#f5f3ff','rgba(124,58,237,0.12)'],
-];
+
+// Separate Top 3 for the podium
+$top_3 = array_slice($teams, 0, 3);
+$rest = array_slice($teams, 3);
 ?>
 
-<div class="page-hero">
-    <div class="page-hero-inner">
-        <div class="eyebrow"><span class="msi" style="font-size:14px">emoji_events</span>Competition</div>
-        <h1>Team Leaderboard</h1>
-        <p>Points earned through events, competitions, and contributions. Updated in real-time by admin.</p>
-        
-        <div style="margin-top:2rem; max-width:400px; margin-inline:auto; text-align:center;">
-            <button id="openTeamSearchBtn" style="width:100%; padding:0.8rem 1rem 0.8rem 1.5rem; text-align:left; border-radius:100px; border:1px solid var(--border); background:white; font-size:1rem; outline:none; box-shadow:var(--shadow-sm); color:var(--text-dim); cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s;">
-                <span class="msi">search</span>
-                <span style="flex:1;">Search teams...</span>
-                <span style="background:var(--surface2); padding:0.2rem 0.5rem; border-radius:6px; font-size:0.75rem; font-family:var(--mono); color:var(--text);">Ctrl+K</span>
-            </button>
-        </div>
-    </div>
-</div>
+<main class="pt-32 pb-24 px-6 max-w-screen-xl mx-auto">
+<!-- Header Section -->
+<header class="text-center mb-16 relative">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<h1 class="text-5xl md:text-7xl font-extrabold font-headline tracking-tight mb-4 relative z-10">Hall of <span class="text-primary">Legends</span></h1>
+<p class="text-xl text-on-surface-variant max-w-2xl mx-auto relative z-10">
+                Recognizing the top contributors, hackers, and teams in the Nexus ecosystem this season.
+            </p>
+</header>
 
-<section class="section">
-<?php if (empty($teams)): ?>
-    <div style="text-align:center;padding:4rem 1rem;color:var(--text-dim);">
-        <span class="msi" style="font-size:3.5rem;display:block;margin-bottom:1rem;opacity:0.25">emoji_events</span>
-        <p>No teams yet. Check back soon!</p>
-    </div>
+<?php if (count($top_3) > 1): ?>
+<!-- Top 3 Podium Section -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end mb-24 max-w-4xl mx-auto">
+<?php
+// Define rank mappings (2, 1, 3 for a podium)
+$podium_order = [];
+if (isset($top_3[1])) $podium_order[] = [$top_3[1], 2, 'silver-gradient', 'rank-shadow-2', '#E0E0E0'];
+if (isset($top_3[0])) $podium_order[] = [$top_3[0], 1, 'gold-gradient', 'rank-shadow-1', '#FFD700'];
+if (isset($top_3[2])) $podium_order[] = [$top_3[2], 3, 'bronze-gradient', 'rank-shadow-3', '#CD7F32'];
+?>
+
+<?php foreach ($podium_order as $idx => list($t, $rank, $grad, $shadow, $color)): 
+    // Just determining physical order classes based on index (0=left/Rank2, 1=center/Rank1, 2=right/Rank3)
+    $order_cls = ($rank == 1) ? 'order-1 md:order-2 z-10 -mt-12 md:mt-0' : (($rank == 2) ? 'order-2 md:order-1' : 'order-3 md:order-3');
+    $initial = strtoupper(substr($t['team_name'], 0, 1));
+?>
+<div class="<?= $order_cls ?> flex flex-col items-center group">
+<?php if ($rank == 1): ?>
+<span class="material-symbols-outlined text-5xl mb-2 <?= $grad ?> <?= $shadow ?>" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<div class="relative w-40 h-40 mb-6">
+<div class="absolute inset-0 bg-secondary/20 rounded-full blur-xl animate-pulse pointer-events-none"></div>
 <?php else: ?>
-
-    <!-- PODIUM -->
-    <?php if (count($teams) >= 2):
-        $podium_order = [];
-        if (isset($teams[1])) $podium_order[] = [$teams[1], 2, '155px'];
-        if (isset($teams[0])) $podium_order[] = [$teams[0], 1, '200px'];
-        if (isset($teams[2])) $podium_order[] = [$teams[2], 3, '120px'];
-        $medals = [1=>'🥇',2=>'🥈',3=>'🥉'];
-    ?>
-    <div style="display:flex;align-items:flex-end;justify-content:center;gap:1.25rem;margin-bottom:3.5rem;flex-wrap:wrap;">
-        <?php foreach ($podium_order as [$t, $place, $h]):
-            [$col,$bg,$shadow] = $palette[($place-1) % 4]; ?>
-        <div style="text-align:center;flex:1;max-width:200px;min-width:130px;">
-            <div style="width:60px;height:60px;border-radius:50%;background:<?= $bg ?>;border:3px solid <?= $col ?>;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:900;color:<?= $col ?>;">
-                <?= strtoupper(substr($t['team_name'],0,1)) ?>
-            </div>
-            <div style="font-size:1.4rem;margin-bottom:0.2rem;"><?= $medals[$place] ?></div>
-            <div style="font-weight:800;font-size:0.88rem;margin-bottom:0.15rem;"><?= htmlspecialchars($t['team_name']) ?></div>
-            <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.5rem;"><?= htmlspecialchars($t['team_no']) ?></div>
-            <div style="height:<?= $h ?>;background:<?= $bg ?>;border:2px solid <?= $col ?>22;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 8px 28px <?= $shadow ?>;">
-                <div style="font-size:2rem;font-weight:900;color:<?= $col ?>;line-height:1;"><?= $t['points'] ?></div>
-                <div style="font-size:0.65rem;color:var(--text-dim);font-weight:700;letter-spacing:.08em;text-transform:uppercase;">pts</div>
-            </div>
-        </div>
-        <?php endforeach; ?>
-    </div>
-    <?php endif; ?>
-
-    <!-- RANKINGS TABLE -->
-    <div style="background:white;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);max-width:760px;margin:0 auto;">
-        <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border);font-weight:700;font-size:0.82rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;">Full Rankings</div>
-        <?php foreach ($teams as $i => $t):
-            $pct = $max_pts > 0 ? round(($t['points']/$max_pts)*100) : 0;
-            [$col,$bg,$shadow] = $palette[$i % 4];
-            $ranks = ['🥇','🥈','🥉'];
-        ?>
-        <div style="display:grid;grid-template-columns:52px 1fr auto auto;gap:1rem;align-items:center;padding:1rem 1.5rem;border-bottom:1px solid var(--border);<?= $i===0?'background:'.$bg.';':'' ?>">
-            <div style="font-size:<?= $i<3?'1.5rem':'0.95rem' ?>;font-weight:800;text-align:center;color:<?= $i<3?$col:'var(--text-dim)' ?>;">
-                <?= $i < 3 ? $ranks[$i] : '#'.($i+1) ?>
-            </div>
-            <div>
-                <div style="font-weight:700;font-size:0.95rem;"><?= htmlspecialchars($t['team_name']) ?> <span style="font-size:0.72rem;color:var(--text-dim);font-weight:400;">· ID: <?= htmlspecialchars($t['team_no']) ?></span></div>
-                <div style="margin-top:0.35rem;height:5px;background:var(--surface2);border-radius:100px;overflow:hidden;width:180px;max-width:100%;">
-                    <div style="width:<?= $pct ?>%;height:100%;background:<?= $col ?>;border-radius:100px;"></div>
-                </div>
-            </div>
-            <div style="font-size:0.78rem;color:var(--text-mid);white-space:nowrap;display:flex;align-items:center;gap:.3rem;">
-                <span class="msi" style="font-size:15px">person</span><?= $t['member_count'] ?>
-            </div>
-            <div style="text-align:right;white-space:nowrap;">
-                <span style="font-size:1.5rem;font-weight:900;color:<?= $col ?>;"><?= $t['points'] ?></span>
-                <span style="font-size:0.7rem;color:var(--text-dim);font-weight:600;"> pts</span>
-            </div>
-        </div>
-        <?php endforeach; ?>
-    </div>
-
+<div class="relative w-32 h-32 mb-6">
+<div class="absolute inset-0 bg-surface-container-highest rounded-full blur-md pointer-events-none"></div>
 <?php endif; ?>
-</section>
 
-<!-- Search Overlay -->
-<div id="searchOverlay" style="position:fixed; inset:0; background:rgba(15,23,42,0.85); backdrop-filter:blur(8px); z-index:9999; display:none; opacity:0; transition:opacity 0.2s;">
-    <div style="max-width:600px; margin:4rem auto 2rem; background:white; border-radius:var(--radius-lg); box-shadow:var(--shadow-xl); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 8rem);">
-        <div style="padding:1rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:1rem;">
-            <span class="msi" style="color:var(--text-mid);">search</span>
-            <input type="text" id="overlayTeamSearch" placeholder="Search teams by name or ID..." style="flex:1; border:none; outline:none; font-size:1.1rem; color:var(--text); font-family:var(--font); background:transparent;">
-            <button id="closeTeamSearchBtn" style="background:var(--surface2); border:none; border-radius:6px; padding:0.3rem 0.6rem; font-size:0.75rem; font-weight:700; color:var(--text-mid); cursor:pointer;">ESC</button>
-        </div>
-        <div id="searchResults" style="padding:1rem; overflow-y:auto; flex:1; max-height:450px;">
-            <div id="searchEmptyState" style="text-align:center; padding:3rem 1rem; color:var(--text-dim);">
-                <span class="msi" style="font-size:2.5rem; opacity:0.3; margin-bottom:0.8rem; display:block;">groups</span>
-                <p>Type a team name or ID to search.</p>
-            </div>
-            <!-- Search results will inject here -->
-        </div>
-    </div>
+<div class="relative w-full h-full rounded-full border-4 flex items-center justify-center font-bold font-headline text-5xl bg-surface-container-high group-hover:scale-105 transition-transform duration-300" style="border-color: <?= $color ?>; color: <?= $color ?>;">
+    <?= $initial ?>
+</div>
+<div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full flex items-center justify-center text-surface font-black shadow-lg" style="background: <?= $color ?>; <?= ($rank==1) ? 'w-10 h-10 -bottom-5 text-xl' : '' ?>">
+    <?= $rank ?>
+</div>
+</div>
+<h3 class="<?= ($rank==1) ? 'text-3xl' : 'text-2xl' ?> font-bold font-headline mb-1 text-center"><?= htmlspecialchars($t['team_name']) ?></h3>
+<p class="text-sm font-bold text-on-surface-variant tracking-wider uppercase mb-2">Team ID: <?= htmlspecialchars($t['team_no']) ?></p>
+<div class="<?= ($rank==1) ? 'text-4xl' : 'text-3xl' ?> font-black <?= $grad ?> <?= $shadow ?>"><?= htmlspecialchars($t['points']) ?> XP</div>
+</div>
+<?php endforeach; ?>
+</section>
+<?php endif; ?>
+
+<!-- Leaderboard List Section -->
+<?php if (count($teams) > 0): ?>
+<section>
+<!-- Filters & Sorting (Static for now) -->
+<div class="flex flex-col sm:flex-row justify-between items-center bg-surface-container p-4 rounded-xl mb-6 border border-white/5">
+<div class="flex gap-2 mb-4 sm:mb-0">
+<button class="px-5 py-2 rounded-lg bg-primary/10 text-primary font-bold text-sm">Global Teams</button>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-sm font-bold text-outline">Search:</span>
+<input type="text" id="teamSearchInput" class="bg-surface-container-low border border-white/10 text-on-surface text-sm rounded-lg focus:ring-primary focus:border-primary block p-2 w-48" placeholder="Team name...">
+</div>
 </div>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
+<!-- The List -->
+<div class="bg-surface-container-low rounded-xl border border-white/5 overflow-hidden">
+<!-- List Header -->
+<div class="grid grid-cols-[80px_1fr_120px_120px] gap-4 p-4 border-b border-surface text-xs font-bold text-outline uppercase tracking-wider">
+<div class="text-center">Rank</div>
+<div>Team</div>
+<div class="text-center hidden sm:block">Members</div>
+<div class="text-right pr-4">Total XP</div>
+</div>
+
+<div id="leaderboardList">
+<?php foreach ($teams as $i => $t): 
+    $rank = $i + 1;
+    if ($rank <= 3) continue; // skip podium if we want, or keep them? 
+    // They are usually in the list as well or we just render $rest.
+    // Let's render everything past the first three, OR if we didn't show podium, just render all.
+    $initial = strtoupper(substr($t['team_name'], 0, 1));
+?>
+<!-- List Item -->
+<div class="team-item grid grid-cols-[80px_1fr_auto_auto] sm:grid-cols-[80px_1fr_120px_120px] gap-4 p-4 items-center hover:bg-surface-container-high transition-colors border-b border-surface/50 group cursor-pointer" data-name="<?= htmlspecialchars(strtolower($t['team_name'])) ?>">
+<div class="text-center font-bold text-xl text-on-surface-variant group-hover:text-on-surface transition-colors"><?= $rank ?></div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-lg border border-primary/30">
+    <?= $initial ?>
+</div>
+<div>
+<div class="font-bold font-headline text-lg group-hover:text-primary transition-colors"><?= htmlspecialchars($t['team_name']) ?></div>
+<div class="text-xs text-outline font-medium">Team ID: <?= htmlspecialchars($t['team_no']) ?></div>
+</div>
+</div>
+<div class="text-center font-bold text-on-surface-variant hidden sm:block flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[16px] align-middle">person</span> <?= $t['member_count'] ?>
+</div>
+<div class="text-right pr-4 font-black font-headline text-on-surface"><?= $t['points'] ?></div>
+</div>
+<?php endforeach; ?>
+</div>
+
+<?php if (empty($rest) && count($teams) <= 3): ?>
+<div class="p-8 text-center text-on-surface-variant font-bold">End of ranking.</div>
+<?php endif; ?>
+</div>
+</section>
+<?php else: ?>
+    <div class="text-center py-24 text-on-surface-variant text-xl">
+        No teams have been ranked yet. Check back soon!
+    </div>
+<?php endif; ?>
+
+</main>
 
 <script>
-const searchOverlay = document.getElementById('searchOverlay');
-const openSearchBtn = document.getElementById('openTeamSearchBtn');
-const closeSearchBtn = document.getElementById('closeTeamSearchBtn');
-const overlayInput = document.getElementById('overlayTeamSearch');
-const searchResults = document.getElementById('searchResults');
-const searchEmptyState = document.getElementById('searchEmptyState');
-
-const teamsList = [
-    <?php
-    $palette = [
-        ['#f59e0b','#fffbeb'],
-        ['#1a73e8','#eff6ff'],
-        ['#16a34a','#f0fdf4'],
-        ['#7c3aed','#f5f3ff'],
-    ];
-    foreach ($teams as $i => $t) {
-        [$col,$bg] = $palette[$i % 4];
-        $initial = strtoupper(mb_substr($t['team_name'],0,1));
-        $avatarHtml = '<div style="width:40px;height:40px;border-radius:50%;background:'.$bg.';color:'.$col.';border:2px solid '.$col.';display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;">'.$initial.'</div>';
-        
-        $rank = $i < 3 ? ['🥇','🥈','🥉'][$i] : '#'.($i+1);
-        
-        echo json_encode([
-            'name' => $t['team_name'],
-            'id' => $t['team_no'],
-            'points' => $t['points'],
-            'members' => (int)$t['member_count'],
-            'rank' => $rank,
-            'avatar' => $avatarHtml,
-            'col' => $col
-        ]) . ",";
-    }
-    ?>
-];
-
-function openSearch() {
-    searchOverlay.style.display = 'block';
-    void searchOverlay.offsetWidth;
-    searchOverlay.style.opacity = '1';
-    overlayInput.value = '';
-    renderResults('');
-    overlayInput.focus();
-    document.body.style.overflow = 'hidden';
-}
-
-function closeSearch() {
-    searchOverlay.style.opacity = '0';
-    setTimeout(() => {
-        searchOverlay.style.display = 'none';
-        document.body.style.overflow = '';
-    }, 200);
-}
-
-if (openSearchBtn) openSearchBtn.addEventListener('click', openSearch);
-closeSearchBtn.addEventListener('click', closeSearch);
-searchOverlay.addEventListener('click', e => {
-    if (e.target === searchOverlay) closeSearch();
-});
-
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && searchOverlay.style.display === 'block') {
-        closeSearch();
-    }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        openSearch();
-    }
-});
-
-function renderResults(filter) {
-    if (!filter) {
-        searchResults.innerHTML = '';
-        searchResults.appendChild(searchEmptyState);
-        searchEmptyState.style.display = 'block';
-        return;
-    }
-    
-    filter = filter.toLowerCase();
-    const hits = teamsList.filter(t => t.name.toLowerCase().includes(filter) || String(t.id).toLowerCase().includes(filter));
-    
-    if (hits.length === 0) {
-        searchResults.innerHTML = '<div style="text-align:center; padding:3rem 1rem; color:var(--text-dim);"><p>No teams found matching "'+filter+'".</p></div>';
-        return;
-    }
-    
-    let html = '<div style="display:flex; flex-direction:column; gap:0.5rem;">';
-    hits.forEach(t => {
-        html += `
-            <div style="display:flex; align-items:center; gap:1.25rem; padding:0.75rem 1rem; border-radius:var(--radius-sm); border:1px solid var(--border); transition:background 0.15s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='white'">
-                <div style="font-size:1.1rem; font-weight:800; color:${t.col}; width:30px; text-align:center;">${t.rank}</div>
-                ${t.avatar}
-                <div style="flex:1;">
-                    <div style="font-weight:700; font-size:0.95rem; color:var(--text);">${t.name} <span style="font-size:0.7rem; font-weight:400; color:var(--text-dim);">· ID: ${t.id}</span></div>
-                    <div style="font-size:0.75rem; color:var(--text-mid); margin-top:0.2rem; display:flex; align-items:center; gap:0.3rem;">
-                        <span class="msi" style="font-size:14px;">person</span> ${t.members} members
-                    </div>
-                </div>
-                <div style="text-align:right;">
-                    <div style="font-size:1.1rem; font-weight:900; color:${t.col};">${t.points}</div>
-                    <div style="font-size:0.65rem; font-weight:700; color:var(--text-dim); text-transform:uppercase;">pts</div>
-                </div>
-            </div>
-        `;
+// Simple live search
+const searchInput = document.getElementById('teamSearchInput');
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        document.querySelectorAll('.team-item').forEach(el => {
+            if (el.dataset.name.includes(query)) {
+                el.style.display = '';
+            } else {
+                el.style.display = 'none';
+            }
+        });
     });
-    html += '</div>';
-    searchResults.innerHTML = html;
 }
-
-overlayInput.addEventListener('input', e => {
-    renderResults(e.target.value);
-});
 </script>
+
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

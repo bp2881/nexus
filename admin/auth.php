@@ -9,7 +9,7 @@ function _load_env(): void {
         $line = trim($line);
         if ($line === '' || $line[0] === '#' || !str_contains($line, '=')) continue;
         [$k, $v] = explode('=', $line, 2);
-        $_ENV[trim($k)] = trim($v);
+        $_ENV[trim($k)] = trim(trim($v), '"\'');
     }
 }
 _load_env();

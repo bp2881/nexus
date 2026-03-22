@@ -1,45 +1,37 @@
 <?php // includes/footer.php ?>
-<footer class="site-footer">
-    <div class="footer-inner" style="grid-template-columns: 2fr 1.2fr 1fr 1fr;">
-        <div class="footer-brand">
-            <div class="footer-logo">
-                <div class="nav-logo-icon"><img src="/assets/images/nexus.png" alt="NX"></div>
-                <span class="nav-logo-text">Nexus</span>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-white/5 bg-[#121316] relative z-20">
+    <div class="flex flex-col md:flex-row justify-between items-center px-12 py-10 w-full max-w-screen-2xl mx-auto">
+        <div class="flex flex-col gap-2 mb-8 md:mb-0">
+            <div class="flex items-center gap-3">
+                <img src="/assets/images/nexus.png" alt="Nexus Logo" class="h-8 w-8 rounded-full object-cover">
+                <div class="text-xl font-bold text-indigo-100 font-headline">Nexus</div>
             </div>
-            <p>A student-run tech club where curious minds build real things, learn fast, and grow together.</p>
-        </div>
-        <div class="footer-col">
-            <h4>Contact Us</h4>
-            <ul style="color:var(--text-dim);line-height:1.8;">
-                <li><span class="msi" style="font-size:16px;vertical-align:middle;margin-right:0.4rem;">call</span> +91 98765 43210</li>
-                <li><span class="msi" style="font-size:16px;vertical-align:middle;margin-right:0.4rem;">mail</span> contact@nexusclub.in</li>
-            </ul>
-        </div>
-        <div class="footer-col" style="flex:0.7">
-            <h4>Navigate</h4>
-            <ul>
-                <li><a href="/index.php">Home</a></li>
-                <li><a href="/pages/events.php">Events</a></li>
-                <li><a href="/pages/projects.php">Projects</a></li>
-                <li><a href="/pages/materials.php">Materials</a></li>
-                <li><a href="/pages/gallery.php">Gallery</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h4>Connect</h4>
-            <ul>
-                <li><a href="#">GitHub</a></li>
-                <li><a href="#">LinkedIn</a></li>
-                <li><a href="#">Discord</a></li>
-                <li><a href="#">Instagram</a></li>
-                <li><a href="/admin/">Admin</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <p>&copy; <?= date('Y') ?> Nexus Club. Built with PHP &amp; SQLite.</p>
-    </div>
+            <div class="font-['Inter'] text-sm tracking-wide text-slate-500">&copy; <?= date('Y')?> Nexus Club. All
+rights reserved.</div>
+<div class="font-['Inter'] text-sm tracking-wide text-slate-400 mt-1">Contact: Pranav Bairy | Ph: +91 98765 43210</div>
+</div>
+<div class="flex items-center gap-10">
+    <a href="/index.php"
+        class="font-['Inter'] text-sm tracking-wide text-slate-500 hover:text-indigo-300 transition-colors">Home</a>
+    <a href="/pages/events.php"
+        class="font-['Inter'] text-sm tracking-wide text-slate-500 hover:text-indigo-300 transition-colors">Events</a>
+    <a href="/pages/projects.php"
+        class="font-['Inter'] text-sm tracking-wide text-slate-500 hover:text-indigo-300 transition-colors">Projects</a>
+    <a href="/pages/contact.php"
+        class="font-['Inter'] text-sm tracking-wide text-slate-500 hover:text-indigo-300 transition-colors">Contact
+        Us</a>
+</div>
+<div class="flex items-center gap-6 mt-8 md:mt-0">
+    <a href="#" class="text-slate-500 hover:text-primary transition-colors"><span
+            class="material-symbols-outlined">analytics</span></a>
+    <a href="#" class="text-slate-500 hover:text-primary transition-colors"><span
+            class="material-symbols-outlined">api</span></a>
+</div>
+</div>
 </footer>
 <script src="/assets/js/main.js"></script>
 </body>
+
 </html>

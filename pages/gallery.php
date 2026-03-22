@@ -6,80 +6,79 @@ require_once __DIR__ . '/../includes/header.php';
 $albums = db_query("SELECT * FROM gallery_albums ORDER BY created_at DESC");
 ?>
 
-<div class="page-hero">
-    <div class="page-hero-inner">
-        <div class="eyebrow"><span class="msi" style="font-size:14px">photo_library</span>Memories</div>
-        <h1>Our Gallery</h1>
-        <p>Snapshots from hackathons, workshops, and club meetups.</p>
-    </div>
-</div>
+<main class="pt-32 pb-24 px-6 max-w-screen-xl mx-auto min-h-screen">
+<!-- Hero Section -->
+<header class="text-center mb-16 relative">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-tertiary-container/10 rounded-full blur-[100px] pointer-events-none"></div>
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/20 mb-6 relative z-10">
+    <span class="material-symbols-outlined text-xs text-tertiary">photo_library</span>
+    <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">Memories</span>
+</span>
+<h1 class="text-5xl md:text-7xl font-extrabold font-headline tracking-tight mb-4 relative z-10">Our <span class="text-tertiary">Gallery</span></h1>
+<p class="text-xl text-on-surface-variant max-w-2xl mx-auto relative z-10 mb-8">
+    Snapshots from hackathons, workshops, and club meetups.
+</p>
+</header>
 
-<section class="section">
+<section>
 <?php if (empty($albums)): ?>
-    <div style="text-align:center;padding:4rem 1rem;color:var(--text-dim);">
-        <span class="msi" style="font-size:3rem;display:block;margin-bottom:.75rem;opacity:.25">photo_library</span>
-        <p>Photos will appear here once the admin adds them.</p>
+    <div class="text-center py-24 text-on-surface-variant bg-surface-container-low rounded-2xl border border-white/5">
+        <span class="material-symbols-outlined text-6xl opacity-20 mb-4 block">photo_library</span>
+        <p class="text-xl">Photos will appear here soon.</p>
     </div>
 <?php else: ?>
 
-<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.5rem;">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     <?php foreach ($albums as $a):
         $has_drive = !empty($a['drive_folder_url']);
         $thumb_src = !empty($a['thumbnail']) ? '/assets/uploads/gallery/' . htmlspecialchars($a['thumbnail']) : '';
     ?>
-    <div style="background:white;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;
-                box-shadow:var(--shadow-sm);transition:box-shadow .2s,transform .2s; cursor:pointer;"
-         onclick="window.location.href='gallery_event.php?id=<?= $a['id'] ?>'"
-         onmouseover="this.style.boxShadow='var(--shadow)';this.style.transform='translateY(-4px)'"
-         onmouseout="this.style.boxShadow='var(--shadow-sm)';this.style.transform=''">
+    <div class="group bg-surface-container-low border border-white/5 rounded-2xl overflow-hidden hover:border-white/20 hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer shadow-lg"
+         onclick="window.location.href='gallery_event.php?id=<?= $a['id'] ?>'">
 
         <!-- Thumbnail -->
-        <div style="aspect-ratio:16/9;background:linear-gradient(135deg,#e0e7ff,#dbeafe);position:relative;overflow:hidden;">
+        <div class="aspect-[4/3] relative overflow-hidden bg-surface-container-highest">
             <?php if ($thumb_src): ?>
             <img src="<?= $thumb_src ?>"
                  alt="<?= htmlspecialchars($a['event_name']) ?>"
-                 style="width:100%;height:100%;object-fit:cover;transition:transform .35s;"
-                 onmouseover="<?= $has_drive ? "this.style.transform='scale(1.05)'" : '' ?>"
-                 onmouseout="this.style.transform=''"
+                 class="w-full h-full object-cover transition-transform duration-700 <?= $has_drive ? 'group-hover:scale-105' : '' ?>"
                  onerror="this.style.display='none'">
             <?php else: ?>
-            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span class="msi" style="font-size:3rem;color:var(--primary);opacity:.3">photo_library</span>
+            <div class="w-full h-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-5xl text-primary opacity-30">photo_library</span>
             </div>
             <?php endif; ?>
 
-            <!-- Dark gradient overlay at bottom -->
-            <div style="position:absolute;inset:0;background:linear-gradient(transparent 45%,rgba(10,15,30,.72));pointer-events:none;"></div>
+            <!-- Gradient overlay -->
+            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
 
             <!-- Event name on the image -->
-            <div style="position:absolute;bottom:0;left:0;right:0;padding:.85rem 1rem;">
-                <div style="color:white;font-weight:800;font-size:1.05rem;text-shadow:0 1px 4px rgba(0,0,0,.5);">
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <div class="text-white font-bold font-headline text-lg leading-tight mb-1">
                     <?= htmlspecialchars($a['event_name']) ?>
                 </div>
                 <?php if ($a['description']): ?>
-                <div style="color:rgba(255,255,255,.75);font-size:.75rem;margin-top:.15rem;text-shadow:0 1px 3px rgba(0,0,0,.5);">
+                <div class="text-white/70 text-xs line-clamp-2">
                     <?= htmlspecialchars($a['description']) ?>
                 </div>
                 <?php endif; ?>
             </div>
 
             <!-- "View photos" badge -->
-            <div style="position:absolute;top:.65rem;right:.65rem;background:rgba(255,255,255,.9);backdrop-filter:blur(4px);
-                        border-radius:100px;padding:.28rem .7rem;display:flex;align-items:center;gap:.3rem;
-                        font-size:.72rem;font-weight:700;color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.15);">
-                <span class="msi" style="font-size:15px">arrow_forward</span>View Gallery
+            <div class="absolute top-3 right-3 bg-white/10 backdrop-blur-md rounded-full px-3 py-1.5 flex items-center gap-1.5 text-xs font-bold text-white shadow-lg border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span class="material-symbols-outlined text-[14px]">visibility</span> View
             </div>
         </div>
 
         <!-- Card footer -->
-        <div style="padding:.8rem 1rem;display:flex;align-items:center;justify-content:space-between;">
-            <div style="font-size:.75rem;color:var(--text-dim);display:flex;align-items:center;gap:.3rem;">
-                <span class="msi" style="font-size:15px">calendar_month</span>
-                <?= date('d M Y', strtotime($a['created_at'])) ?>
+        <div class="p-4 flex items-center justify-between mt-auto">
+            <div class="text-xs text-on-surface-variant font-label flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[14px]">calendar_month</span>
+                <span><?= date('d M Y', strtotime($a['created_at'])) ?></span>
             </div>
             <?php if ($has_drive): ?>
-            <div style="font-size:.72rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:.25rem;">
-                <span class="msi" style="font-size:14px">folder_open</span>Drive Link
+            <div class="text-xs font-bold text-primary flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">folder_open</span> Drive
             </div>
             <?php endif; ?>
         </div>
@@ -89,5 +88,6 @@ $albums = db_query("SELECT * FROM gallery_albums ORDER BY created_at DESC");
 
 <?php endif; ?>
 </section>
+</main>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

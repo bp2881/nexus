@@ -11,129 +11,121 @@ $faculty      = array_filter($all, fn($m) => $m['role'] === 'faculty_coordinator
 $student_coords = array_filter($all, fn($m) => $m['role'] === 'student_coordinator');
 $club_members = array_filter($all, fn($m) => !in_array($m['role'], ['hod','faculty_coordinator','student_coordinator']));
 
-// Avatar helper — photo if set, else coloured initial
-function avatar(array $m, int $size = 96): string {
-    $initial = htmlspecialchars(strtoupper(mb_substr($m['name'], 0, 1)));
+// Avatar helper
+function avatar(array $m, int $size = 24): string {
+    $initial = htmlspecialchars(strtoupper(substr($m['name'], 0, 1)));
     $colors  = ['#1a73e8','#16a34a','#7c3aed','#db2777','#f59e0b','#0891b2'];
     $bg      = $colors[crc32($m['name']) % count($colors)];
     if (!empty($m['photo_url'])) {
-        return '<img src="'.htmlspecialchars($m['photo_url']).'" alt="'.htmlspecialchars($m['name']).'"
-                     style="width:'.$size.'px;height:'.$size.'px;border-radius:50%;object-fit:cover;border:3px solid white;box-shadow:0 2px 12px rgba(0,0,0,.12);"
-                     onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
-             .'<div style="width:'.$size.'px;height:'.$size.'px;border-radius:50%;background:'.$bg.';color:white;display:none;align-items:center;justify-content:center;font-size:'.round($size*.38).'px;font-weight:800;">'.$initial.'</div>';
+        return '<img src="'.htmlspecialchars($m['photo_url']).'" alt="'.htmlspecialchars($m['name']).'" class="w-full h-full object-cover rounded-full border-2 border-surface shadow-md" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+             .'<div class="hidden w-full h-full items-center justify-center rounded-full text-white font-extrabold" style="background:'.$bg.';">'.$initial.'</div>';
     }
-    return '<div style="width:'.$size.'px;height:'.$size.'px;border-radius:50%;background:'.$bg.';color:white;display:flex;align-items:center;justify-content:center;font-size:'.round($size*.38).'px;font-weight:800;border:3px solid white;box-shadow:0 2px 12px rgba(0,0,0,.12);">'.$initial.'</div>';
+    return '<div class="flex w-full h-full items-center justify-center rounded-full text-white font-extrabold border-2 border-surface shadow-md" style="background:'.$bg.';">'.$initial.'</div>';
 }
 ?>
 
-<div class="page-hero">
-    <div class="page-hero-inner">
-        <div class="eyebrow"><span class="msi" style="font-size:14px">group</span>Our People</div>
-        <h1>Meet the Team</h1>
-        <p>The faculty and students who make Nexus run.</p>
-        
-        <div style="margin-top:2rem; max-width:400px; margin-inline:auto; text-align:center;">
-            <button id="openMemberSearchBtn" style="width:100%; padding:0.8rem 1rem 0.8rem 1.5rem; text-align:left; border-radius:100px; border:1px solid var(--border); background:white; font-size:1rem; outline:none; box-shadow:var(--shadow-sm); color:var(--text-dim); cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s;">
-                <span class="msi">search</span>
-                <span style="flex:1;">Search members...</span>
-                <span style="background:var(--surface2); padding:0.2rem 0.5rem; border-radius:6px; font-size:0.75rem; font-family:var(--mono); color:var(--text);">Ctrl+K</span>
-            </button>
-        </div>
-    </div>
+<main class="pt-32 pb-24 px-6 max-w-screen-xl mx-auto min-h-screen">
+<!-- Hero Section -->
+<header class="text-center mb-16 relative">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/20 mb-6 relative z-10">
+    <span class="material-symbols-outlined text-xs text-primary">group</span>
+    <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">Our People</span>
+</span>
+<h1 class="text-5xl md:text-7xl font-extrabold font-headline tracking-tight mb-4 relative z-10">Meet the <span class="text-primary">Team</span></h1>
+<p class="text-xl text-on-surface-variant max-w-2xl mx-auto relative z-10 mb-8">
+    The faculty and students who make Nexus run.
+</p>
+
+<div class="max-w-md mx-auto relative z-10">
+    <button id="openMemberSearchBtn" class="w-full px-6 py-4 text-left rounded-full border border-white/10 bg-surface-container-low hover:bg-surface-container-high transition-colors shadow-lg flex items-center gap-3 group">
+        <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">search</span>
+        <span class="flex-1 text-on-surface-variant group-hover:text-on-surface transition-colors">Search members...</span>
+        <span class="px-2 py-1 rounded-md bg-surface-container-highest text-xs font-mono text-outline">Ctrl+K</span>
+    </button>
 </div>
+</header>
 
-<!-- ══════════════════════════════════════════════════════════
-     HOD (DUMMY)
-════════════════════════════════════════════════════════════ -->
-<section class="section" style="padding-bottom:1rem;">
-    <div style="margin-bottom:2rem;">
-        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;justify-content:center;text-align:center;">
-            <div style="height:1px;background:var(--border);flex:1;margin-right:1rem;"></div>
-            Head of Department
-            <div style="height:1px;background:var(--border);flex:1;margin-left:1rem;"></div>
-        </h2>
+<!-- HOD -->
+<section class="mb-20">
+    <div class="flex items-center justify-center mb-10">
+        <div class="h-px bg-white/10 flex-1 max-w-[100px] mr-4"></div>
+        <h2 class="text-2xl md:text-3xl font-black font-headline tracking-widest uppercase text-center text-on-surface">Head of Department</h2>
+        <div class="h-px bg-white/10 flex-1 max-w-[100px] ml-4"></div>
     </div>
-    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;">
-        <div class="member-card dummy-card" data-name="hod dummy name" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:280px;">
-            <img src="/assets/images/rajavikram.avif" style="width:100%;height:100%;object-fit:cover;">
-            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
-                <div style="color:white;font-weight:900;font-style:italic;font-size:1.1rem;text-transform:uppercase;margin-bottom:0.1rem;">Dr. HOD Name</div>
-                <div style="color:#fbbf24;font-weight:800;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Head of Department, CSE</div>
+    <div class="flex justify-center flex-wrap gap-8">
+        <div class="group relative rounded-2xl overflow-hidden aspect-[3/4] w-full max-w-[280px] border border-white/5 shadow-2xl transition-transform hover:-translate-y-2">
+            <img src="/assets/images/rajavikram.avif" alt="HOD" class="w-full h-full object-cover">
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-6 pt-12">
+                <div class="text-white font-black font-headline text-xl uppercase tracking-wider mb-1">Dr. G. RajaVikram</div>
+                <div class="text-secondary font-bold text-xs uppercase tracking-widest">Head of Department, CSE</div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════════════
-     FACULTY COORDINATORS (DUMMY)
-════════════════════════════════════════════════════════════ -->
-<section class="section" style="padding-top:1rem;padding-bottom:1rem;">
-    <div style="margin-bottom:2rem;">
-        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;justify-content:center;text-align:center;">
-            <div style="height:1px;background:var(--border);flex:1;margin-right:1rem;"></div>
-            Faculty Coordinators
-            <div style="height:1px;background:var(--border);flex:1;margin-left:1rem;"></div>
-        </h2>
+<!-- Faculty Coordinators -->
+<section class="mb-20">
+    <div class="flex items-center justify-center mb-10">
+        <div class="h-px bg-white/10 flex-1 max-w-[100px] mr-4"></div>
+        <h2 class="text-2xl md:text-3xl font-black font-headline tracking-widest uppercase text-center text-on-surface">Faculty Coordinators</h2>
+        <div class="h-px bg-white/10 flex-1 max-w-[100px] ml-4"></div>
     </div>
-    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;">
-        <div class="member-card dummy-card" data-name="faculty name <?= $i ?>" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:260px;">
-            <img src="/assets/images/balaji.avif" style="width:100%;height:100%;object-fit:cover;">
-            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
-                <div style="color:white;font-weight:900;font-style:italic;font-size:1.1rem;text-transform:uppercase;margin-bottom:0.1rem;">Mr. Faculty Name <?= $i ?></div>
-                <div style="color:#fbbf24;font-weight:800;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Assistant Professor</div>
+    <div class="flex justify-center flex-wrap gap-8">
+        <div class="group relative rounded-2xl overflow-hidden aspect-[3/4] w-full max-w-[260px] border border-white/5 shadow-2xl transition-transform hover:-translate-y-2">
+            <img src="/assets/images/balaji.avif" alt="Faculty" class="w-full h-full object-cover">
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-6 pt-12">
+                <div class="text-white font-black font-headline text-lg uppercase tracking-wider mb-1">Mr. Balaji Lanka</div>
+                <div class="text-secondary font-bold text-xs uppercase tracking-widest">Assistant Professor</div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════════════
-     STUDENT COORDINATORS (DUMMY)
-════════════════════════════════════════════════════════════ -->
-<section class="section" style="padding-top:1rem;padding-bottom:1rem;">
-    <div style="margin-bottom:2rem;">
-        <h2 style="font-size:1.8rem;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--text);display:flex;align-items:center;justify-content:center;text-align:center;">
-            <div style="height:1px;background:var(--border);flex:1;margin-right:1rem;"></div>
-            Student Leads & Coordinators
-            <div style="height:1px;background:var(--border);flex:1;margin-left:1rem;"></div>
-        </h2>
+<!-- Student Leads -->
+<section class="mb-24">
+    <div class="flex items-center justify-center mb-10">
+        <div class="h-px bg-white/10 flex-1 max-w-[100px] mr-4"></div>
+        <h2 class="text-2xl md:text-3xl font-black font-headline tracking-widest uppercase text-center text-on-surface">Student Leads</h2>
+        <div class="h-px bg-white/10 flex-1 max-w-[100px] ml-4"></div>
     </div>
-    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;">
-        <div class="member-card dummy-card" data-name="student name" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:240px;">
-            <img src="/assets/images/kowshik.avif" style="width:100%;height:100%;object-fit:cover;">
-            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
-                <div style="color:white;font-weight:900;font-style:italic;font-size:1.05rem;text-transform:uppercase;margin-bottom:0.1rem;">Ghanta Kowshik Kumar</div>
-                <div style="color:#fbbf24;font-weight:800;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;">Co-Lead</div>
+    <div class="flex justify-center flex-wrap gap-6">
+        <div class="group relative rounded-2xl overflow-hidden aspect-[3/4] w-full max-w-[240px] border border-white/5 shadow-xl transition-transform hover:-translate-y-2">
+            <img src="/assets/images/kowshik.avif" alt="Student Lead" class="w-full h-full object-cover transition-all duration-500">
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-5 pt-12">
+                <div class="text-white font-black font-headline text-lg uppercase tracking-wider mb-1">Ghanta Kowshik Kumar</div>
+                <div class="text-primary font-bold text-xs uppercase tracking-widest">Co-Lead</div>
             </div>
         </div>
-        <div class="member-card dummy-card" data-name="student name" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:240px;">
-            <img src="/assets/images/pranav.avif" style="width:100%;height:100%;object-fit:cover;">
-            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
-                <div style="color:white;font-weight:900;font-style:italic;font-size:1.05rem;text-transform:uppercase;margin-bottom:0.1rem;">Pranav Bairy</div>
-                <div style="color:#fbbf24;font-weight:800;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;">Co-Lead</div>
+        <div class="group relative rounded-2xl overflow-hidden aspect-[3/4] w-full max-w-[240px] border border-white/5 shadow-xl transition-transform hover:-translate-y-2">
+            <img src="/assets/images/pranav.avif" alt="Student Lead" class="w-full h-full object-cover transition-all duration-500">
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-5 pt-12">
+                <div class="text-white font-black font-headline text-lg uppercase tracking-wider mb-1">Pranav Bairy</div>
+                <div class="text-primary font-bold text-xs uppercase tracking-widest">Co-Lead</div>
             </div>
         </div>
-        <div class="member-card dummy-card" data-name="student name" style="position:relative;border-radius:1rem;overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow);width:100%;max-width:240px;">
-            <img src="/assets/images/devesh.avif" style="width:100%;height:100%;object-fit:cover;">
-            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);padding:2rem 1.25rem 1.25rem;">
-                <div style="color:white;font-weight:900;font-style:italic;font-size:1.05rem;text-transform:uppercase;margin-bottom:0.1rem;">Devesh Rayudu</div>
-                <div style="color:#fbbf24;font-weight:800;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;">Co-Lead</div>
+        <div class="group relative rounded-2xl overflow-hidden aspect-[3/4] w-full max-w-[240px] border border-white/5 shadow-xl transition-transform hover:-translate-y-2">
+            <img src="/assets/images/devesh.avif" alt="Student Lead" class="w-full h-full object-cover transition-all duration-500">
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-5 pt-12">
+                <div class="text-white font-black font-headline text-lg uppercase tracking-wider mb-1">Devesh Rayudu</div>
+                <div class="text-primary font-bold text-xs uppercase tracking-widest">Co-Lead</div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════════════
-     CLUB MEMBERS (by team)
-════════════════════════════════════════════════════════════ -->
+<!-- Club Members by Team -->
 <?php if (!empty($club_members)): ?>
-<section class="section" style="padding-top:0;">
-    <div style="text-align:center;margin-bottom:2rem;">
-        <div class="eyebrow" style="justify-content:center;"><span class="msi" style="font-size:14px">groups</span>Club Members</div>
-        <h2 style="font-size:1.4rem;font-weight:800;margin-top:.4rem;">Members</h2>
+<section>
+    <div class="text-center mb-12">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/20 mb-4">
+            <span class="material-symbols-outlined text-xs text-primary">groups</span>
+            <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">Club Members</span>
+        </span>
+        <h2 class="text-3xl font-extrabold font-headline text-on-surface">Members By Team</h2>
     </div>
 
     <?php
-    // Group remaining members by team
     $by_team = [];
     foreach ($club_members as $m) {
         $key = $m['team_id'] ?? 0;
@@ -141,37 +133,36 @@ function avatar(array $m, int $size = 96): string {
     }
     $teams_data = db_query_cached("SELECT * FROM teams ORDER BY team_no");
     $teams_map  = array_column($teams_data, null, 'id');
-
-    $role_colors = ['lead'=>['#fffbeb','#f59e0b'],'member'=>['#eff6ff','#1a73e8'],'core'=>['#fdf4ff','#7c3aed']];
     ?>
 
     <?php foreach ($by_team as $tid => $grp):
         $team = $teams_map[$tid] ?? null; ?>
-    <div style="margin-bottom:2.5rem;">
+    <div class="mb-12">
         <?php if ($team): ?>
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:2px solid var(--border);">
-            <div style="width:34px;height:34px;border-radius:9px;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;">
-                <span class="msi" style="font-size:18px">groups</span>
+        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                <span class="material-symbols-outlined">group_work</span>
             </div>
             <div>
-                <span style="font-weight:800;font-size:.95rem;"><?= htmlspecialchars($team['team_name']) ?> (ID: <?= htmlspecialchars($team['team_no']) ?>)</span>
-                <span style="font-size:.72rem;color:var(--text-dim);margin-left:.5rem;"><?= count($grp) ?> members</span>
+                <h3 class="font-headline font-bold text-lg text-on-surface"><?= htmlspecialchars($team['team_name']) ?> <span class="text-outline text-sm font-normal ml-2">ID: <?= htmlspecialchars($team['team_no']) ?></span></h3>
+                <p class="text-xs text-on-surface-variant"><?= count($grp) ?> Members</p>
             </div>
         </div>
         <?php else: ?>
-        <div style="font-weight:700;font-size:.85rem;color:var(--text-dim);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px dashed var(--border);">Unassigned</div>
+        <h3 class="font-headline font-bold text-lg text-on-surface-variant mb-6 pb-2 border-b border-surface/50 border-dashed">Unassigned</h3>
         <?php endif; ?>
 
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:.75rem;">
-            <?php foreach ($grp as $m):
-                [$rbg,$rcol] = $role_colors[$m['role']] ?? ['#f1f5f9','#64748b']; ?>
-            <div class="member-card club-member-card" data-name="<?= htmlspecialchars(strtolower($m['name'])) ?>" style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem;box-shadow:var(--shadow-sm);transition:all .18s;"
-                 onmouseover="this.style.boxShadow='var(--shadow)';this.style.transform='translateY(-2px)'"
-                 onmouseout="this.style.boxShadow='var(--shadow-sm)';this.style.transform=''">
-                <?= avatar($m, 40) ?>
-                <div style="flex:1; overflow:hidden;">
-                    <div style="font-weight:700;font-size:.85rem;line-height:1.2;margin-bottom:0.15rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"><?= htmlspecialchars($m['name']) ?></div>
-                    <span style="display:inline-block;margin-top:.2rem;padding:.15rem .5rem;border-radius:100px;background:<?= $rbg ?>;color:<?= $rcol ?>;font-size:.65rem;font-weight:700;"><?= ucfirst($m['role']) ?></span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <?php foreach ($grp as $m): ?>
+            <div class="member-card bg-surface-container-low border border-white/5 rounded-xl p-4 flex items-center gap-4 hover:-translate-y-1 hover:border-white/10 hover:bg-surface-container-high transition-all" data-name="<?= htmlspecialchars(strtolower($m['name'])) ?>">
+                <div class="w-12 h-12 flex-shrink-0">
+                    <?= avatar($m, 48) ?>
+                </div>
+                <div class="overflow-hidden flex-1">
+                    <h4 class="font-bold text-sm text-on-surface truncate mb-1"><?= htmlspecialchars($m['name']) ?></h4>
+                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider <?= $m['role'] === 'lead' ? 'bg-secondary/20 text-secondary-fixed-dim' : 'bg-surface-container-highest text-outline' ?>">
+                        <?= htmlspecialchars($m['role']) ?>
+                    </span>
                 </div>
             </div>
             <?php endforeach; ?>
@@ -182,34 +173,34 @@ function avatar(array $m, int $size = 96): string {
 <?php endif; ?>
 
 <?php if (empty($all)): ?>
-<section class="section" style="text-align:center;padding:4rem 1rem;color:var(--text-dim);">
-    <span class="msi" style="font-size:3rem;display:block;margin-bottom:1rem;opacity:0.25">group</span>
-    <p>Member profiles coming soon!</p>
+<section class="text-center py-24 text-on-surface-variant">
+    <span class="material-symbols-outlined text-6xl opacity-20 mb-4 block">group</span>
+    <p class="text-xl">Member profiles coming soon!</p>
 </section>
 <?php endif; ?>
+</main>
 
 <!-- Search Overlay -->
-<div id="searchOverlay" style="position:fixed; inset:0; background:rgba(15,23,42,0.85); backdrop-filter:blur(8px); z-index:9999; display:none; opacity:0; transition:opacity 0.2s;">
-    <div style="max-width:600px; margin:4rem auto 2rem; background:white; border-radius:var(--radius-lg); box-shadow:var(--shadow-xl); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 8rem);">
-        <div style="padding:1rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:1rem;">
-            <span class="msi" style="color:var(--text-mid);">search</span>
-            <input type="text" id="overlayMemberSearch" placeholder="Search members by name..." style="flex:1; border:none; outline:none; font-size:1.1rem; color:var(--text); font-family:var(--font); background:transparent;">
-            <button id="closeMemberSearchBtn" style="background:var(--surface2); border:none; border-radius:6px; padding:0.3rem 0.6rem; font-size:0.75rem; font-weight:700; color:var(--text-mid); cursor:pointer;">ESC</button>
+<div id="searchOverlay" class="fixed inset-0 bg-[#0d0e11]/90 backdrop-blur-md z-[100] hidden opacity-0 transition-opacity duration-200">
+    <div class="max-w-2xl mx-auto mt-24 bg-surface-container rounded-2xl border border-white/10 shadow-2xl flex flex-col max-h-[70vh] overflow-hidden transform scale-95 transition-transform duration-200" id="searchModal">
+        <div class="px-6 py-4 border-b border-white/5 flex items-center gap-4">
+            <span class="material-symbols-outlined text-outline">search</span>
+            <input type="text" id="overlayMemberSearch" placeholder="Search members by name..." class="flex-1 bg-transparent border-none text-on-surface text-lg outline-none focus:ring-0 p-0 placeholder-outline">
+            <button id="closeMemberSearchBtn" class="bg-surface-container-high hover:bg-surface-container-highest text-outline px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">ESC</button>
         </div>
-        <div id="searchResults" style="padding:1rem; overflow-y:auto; flex:1; max-height:450px;">
-            <div id="searchEmptyState" style="text-align:center; padding:3rem 1rem; color:var(--text-dim);">
-                <span class="msi" style="font-size:2.5rem; opacity:0.3; margin-bottom:0.8rem; display:block;">person_search</span>
+        <div id="searchResults" class="p-4 overflow-y-auto flex-1">
+            <div id="searchEmptyState" class="text-center py-16 text-on-surface-variant">
+                <span class="material-symbols-outlined text-5xl opacity-20 mb-4 block">person_search</span>
                 <p>Type a name to search our members.</p>
             </div>
-            <!-- Search results will inject here -->
+            <!-- Results injected here -->
         </div>
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
-
 <script>
 const searchOverlay = document.getElementById('searchOverlay');
+const searchModal = document.getElementById('searchModal');
 const openSearchBtn = document.getElementById('openMemberSearchBtn');
 const closeSearchBtn = document.getElementById('closeMemberSearchBtn');
 const overlayInput = document.getElementById('overlayMemberSearch');
@@ -219,14 +210,12 @@ const searchEmptyState = document.getElementById('searchEmptyState');
 const membersList = [
     <?php
     foreach ($all as $m) {
-        $initial = htmlspecialchars(strtoupper(mb_substr($m['name'], 0, 1)));
+        $initial = htmlspecialchars(strtoupper(substr($m['name'], 0, 1)));
         $colors  = ['#1a73e8','#16a34a','#7c3aed','#db2777','#f59e0b','#0891b2'];
         $bg      = $colors[crc32($m['name']) % count($colors)];
         
-        $roleInfo = ucfirst($m['role']);
+        $roleInfo = ucfirst(str_replace('_', ' ', $m['role']));
         if ($m['role'] === 'hod') $roleInfo = 'Head of Department';
-        else if ($m['role'] === 'faculty_coordinator') $roleInfo = 'Faculty Coordinator';
-        else if ($m['role'] === 'student_coordinator') $roleInfo = 'Student Coordinator';
 
         $tName = '';
         if (!empty($m['team_id'])) {
@@ -235,9 +224,9 @@ const membersList = [
         
         $avatarHtml = '';
         if (!empty($m['photo_url'])) {
-            $avatarHtml = '<img src="'.htmlspecialchars($m['photo_url']).'" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">';
+            $avatarHtml = '<img src="'.htmlspecialchars($m['photo_url']).'" class="w-10 h-10 rounded-full object-cover shadow-sm">';
         } else {
-            $avatarHtml = '<div style="width:40px;height:40px;border-radius:50%;background:'.$bg.';color:white;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;">'.$initial.'</div>';
+            $avatarHtml = '<div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-extrabold shadow-sm" style="background:'.$bg.';">'.$initial.'</div>';
         }
 
         echo json_encode([
@@ -251,9 +240,12 @@ const membersList = [
 ];
 
 function openSearch() {
-    searchOverlay.style.display = 'block';
-    void searchOverlay.offsetWidth;
-    searchOverlay.style.opacity = '1';
+    searchOverlay.classList.remove('hidden');
+    // small delay for transition
+    setTimeout(() => {
+        searchOverlay.classList.remove('opacity-0');
+        searchModal.classList.remove('scale-95');
+    }, 10);
     overlayInput.value = '';
     renderResults('');
     overlayInput.focus();
@@ -261,21 +253,22 @@ function openSearch() {
 }
 
 function closeSearch() {
-    searchOverlay.style.opacity = '0';
+    searchOverlay.classList.add('opacity-0');
+    searchModal.classList.add('scale-95');
     setTimeout(() => {
-        searchOverlay.style.display = 'none';
+        searchOverlay.classList.add('hidden');
         document.body.style.overflow = '';
     }, 200);
 }
 
-openSearchBtn.addEventListener('click', openSearch);
-closeSearchBtn.addEventListener('click', closeSearch);
+if(openSearchBtn) openSearchBtn.addEventListener('click', openSearch);
+if(closeSearchBtn) closeSearchBtn.addEventListener('click', closeSearch);
 searchOverlay.addEventListener('click', e => {
     if (e.target === searchOverlay) closeSearch();
 });
 
 document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && searchOverlay.style.display === 'block') {
+    if (e.key === 'Escape' && !searchOverlay.classList.contains('hidden')) {
         closeSearch();
     }
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -296,20 +289,20 @@ function renderResults(filter) {
     const hits = membersList.filter(m => m.name.toLowerCase().includes(filter) || m.team.toLowerCase().includes(filter));
     
     if (hits.length === 0) {
-        searchResults.innerHTML = '<div style="text-align:center; padding:3rem 1rem; color:var(--text-dim);"><p>No members found matching "'+filter+'".</p></div>';
+        searchResults.innerHTML = '<div class="text-center py-16 text-on-surface-variant"><p>No members found matching "'+filter+'".</p></div>';
         return;
     }
     
-    let html = '<div style="display:flex; flex-direction:column; gap:0.5rem;">';
+    let html = '<div class="flex flex-col gap-2">';
     hits.forEach(m => {
         html += `
-            <div style="display:flex; align-items:center; gap:1rem; padding:0.75rem 1rem; border-radius:var(--radius-sm); border:1px solid var(--border); transition:background 0.15s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='white'">
+            <div class="flex items-center gap-4 p-3 rounded-xl border border-white/5 bg-surface hover:bg-surface-container-high transition-colors cursor-pointer group">
                 ${m.avatar}
-                <div style="flex:1;">
-                    <div style="font-weight:700; font-size:0.95rem; color:var(--text);">${m.name}</div>
-                    <div style="font-size:0.75rem; color:var(--text-mid); margin-top:0.2rem; display:flex; align-items:center; gap:0.4rem;">
-                        <span style="background:var(--primary-light); color:var(--primary); padding:0.15rem 0.5rem; border-radius:100px; font-weight:700; font-size:0.65rem;">${m.role}</span>
-                        ${m.team ? '<span style="color:var(--text-dim);">&bull;</span> <span>' + m.team + '</span>' : ''}
+                <div class="flex-1 overflow-hidden">
+                    <div class="font-bold text-sm text-on-surface group-hover:text-primary transition-colors">${m.name}</div>
+                    <div class="text-xs text-outline mt-1 flex items-center gap-2">
+                        <span class="bg-surface-container-highest px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider font-bold text-on-surface-variant">${m.role}</span>
+                        ${m.team ? '<span class="text-outline">&bull;</span> <span class="truncate">' + m.team + '</span>' : ''}
                     </div>
                 </div>
             </div>
@@ -323,3 +316,5 @@ overlayInput.addEventListener('input', e => {
     renderResults(e.target.value);
 });
 </script>
+
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>
