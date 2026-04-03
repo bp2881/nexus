@@ -31,7 +31,7 @@ rights reserved.</div>
 </div>
 </div>
 </footer>
-<script src="/assets/js/main.js"></script>
+<script type="module" src="/assets/js/main.js"></script>
 </body>
 
 </html>

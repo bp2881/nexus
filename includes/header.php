@@ -90,12 +90,12 @@
 <!-- TopNavBar -->
 <nav class="fixed top-0 w-full z-50 bg-[#121316]/80 backdrop-blur-xl border-b border-white/5 shadow-2xl shadow-indigo-500/5">
     <div class="flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto">
-        <div class="flex items-center gap-8">
+        <div class="flex flex-1 items-center gap-8">
             <div class="flex items-center gap-3">
                 <img src="/assets/images/nexus.png" alt="Nexus Logo" class="h-8 w-8 rounded-full object-cover">
                 <div class="text-2xl font-black tracking-tighter text-indigo-100 font-headline">Nexus</div>
             </div>
-            <div class="hidden md:flex gap-6">
+            <div id="navLinks" class="hidden md:flex gap-6 flex-col md:flex-row absolute md:static top-full left-0 w-full md:w-auto bg-[#121316] md:bg-transparent border-b md:border-b-0 border-white/10 md:border-transparent p-6 md:p-0 shadow-xl md:shadow-none">
                 <a class="text-sm font-bold <?= $current_page==='index' ? 'text-indigo-400 border-b-2 border-indigo-400 pb-1' : 'text-outline hover:text-indigo-200 transition-colors' ?>" href="/index.php">Home</a>
                 <a class="text-sm font-bold <?= $current_page==='events' ? 'text-indigo-400 border-b-2 border-indigo-400 pb-1' : 'text-outline hover:text-indigo-200 transition-colors' ?>" href="/pages/events.php">Events</a>
                 <a class="text-sm font-bold <?= $current_page==='projects' ? 'text-indigo-400 border-b-2 border-indigo-400 pb-1' : 'text-outline hover:text-indigo-200 transition-colors' ?>" href="/pages/projects.php">Projects</a>
@@ -107,6 +107,11 @@
         </div>
         <div class="flex items-center gap-4">
             <a href="/pages/contact.php" class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold text-sm hover:bg-primary-fixed transition-colors">Join Us</a>
+            <button id="navToggle" class="md:hidden text-white flex flex-col gap-[5px] justify-center w-8 h-8">
+                <span class="block w-6 h-[2px] bg-white rounded-full"></span>
+                <span class="block w-6 h-[2px] bg-white rounded-full"></span>
+                <span class="block w-6 h-[2px] bg-white rounded-full"></span>
+            </button>
         </div>
     </div>
 </nav>
