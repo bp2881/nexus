@@ -5,10 +5,13 @@ services:
     build: .
     ports:
       - "80:80"
+    # env_file injects variables directly into the process memory,
+    # which is the most secure way to handle secrets in Docker.
+    env_file: .env
     volumes:
       - ./db:/var/www/html/db
       - ./cache:/var/www/html/cache
     restart: always
 
-# Note: The database (nexus.db) will persevere in the ./db folder 
-# on the host machine even if the container is deleted or updated.
+# Notice: We NO LONGER mount the .env file as a volume.
+# This prevents it from being physically present in the web root.

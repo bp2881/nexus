@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache mod_rewrite for friendly URLs
 RUN a2enmod rewrite
 
+# Enable .htaccess support (AllowOverride All)
+RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+
 # Set the working directory to Apache's default web root
 WORKDIR /var/www/html
 

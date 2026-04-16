@@ -1,0 +1,29 @@
+# Security: Deny access to sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block specific sensitive files just in case
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
+<Files "Dockerfile">
+    Order allow,deny
+    Deny from all
+</Files>
+<Files "docker-compose.yml">
+    Order allow,deny
+    Deny from all
+</Files>
+<Files "deployment_guide.md">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Enable URL Rewriting if needed (standard for modern PHP apps)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Your rewrite rules here if any
+</IfModule>

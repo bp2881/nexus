@@ -3,6 +3,11 @@
 // Credentials are read from environment variables or .env if present.
 
 function _load_env(): void {
+    // If vars already exist in environment (like from Docker), skip loading file
+    if (getenv('ADMIN_USER') !== false && getenv('ADMIN_PASS_HASH') !== false) {
+        return;
+    }
+
     $env = __DIR__ . '/../.env';
     if (!file_exists($env)) return;
     foreach (file($env, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
