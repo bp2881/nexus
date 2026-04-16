@@ -33,13 +33,13 @@ window.addEventListener('load', () => {
     const elementsToReplace = new Map();
 
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT, {
-        acceptNode: function(node) {
+        acceptNode: function (node) {
             const tag = node.tagName.toLowerCase();
             // Reject non-text tags and containers that shouldn't be touched directly
             if (['script', 'style', 'canvas', 'svg', 'img', 'input', 'textarea', 'select', 'option'].includes(tag)) {
                 return NodeFilter.FILTER_REJECT;
             }
-            
+
             // Accept leaf nodes or those containing only spans/text/br
             if (node.children.length === 0 || Array.from(node.children).every(c => ['BR', 'SPAN', 'B', 'I', 'STRONG'].includes(c.tagName))) {
                 const text = node.textContent?.trim() || "";
@@ -89,7 +89,7 @@ async function renderPretext(el, originalText) {
 
     const styles = window.getComputedStyle(el);
     const font = `${styles.fontWeight} ${styles.fontSize} ${styles.fontFamily}`;
-    
+
     // Determine available width. For block components it's clientWidth.
     // For inlines inside a tight flexbox, tracking parentElement gives breathing room for wrapping.
     let availableWidth = el.clientWidth;
@@ -103,10 +103,10 @@ async function renderPretext(el, originalText) {
 
     try {
         const prepared = prepare(originalText, font);
-        
+
         // Dynamically import layoutWithLines to construct text fragments
         const { layoutWithLines } = await import('https://esm.sh/@chenglou/pretext?bundle');
-        
+
         const { lines } = layoutWithLines(prepared, availableWidth, lineHeight);
 
         if (lines && lines.length > 0) {
@@ -119,7 +119,7 @@ async function renderPretext(el, originalText) {
 
 function drawCanvas(el, lines, availableWidth, lineHeight, font, color, textAlign) {
     const height = lines.length * lineHeight;
-    
+
     let maxLineWidth = 0;
     lines.forEach(l => { if (l.width > maxLineWidth) maxLineWidth = l.width; });
     const width = Math.min(availableWidth, maxLineWidth);
@@ -130,22 +130,22 @@ function drawCanvas(el, lines, availableWidth, lineHeight, font, color, textAlig
         canvas = document.createElement('canvas');
         el.appendChild(canvas);
     }
-    
+
     const dpr = window.devicePixelRatio || 1;
     // Add 1px padding for text kerning overlaps
-    canvas.width = Math.ceil(width * dpr) + 2; 
+    canvas.width = Math.ceil(width * dpr) + 2;
     canvas.height = Math.ceil(height * dpr);
     canvas.style.width = width + 'px';
     canvas.style.height = height + 'px';
     canvas.style.display = 'inline-block';
     canvas.style.verticalAlign = 'top';
-    
+
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
     ctx.font = font;
     ctx.fillStyle = color;
     ctx.textBaseline = 'top';
-    
+
     let y = 0;
     for (const line of lines) {
         let x = 0;
@@ -154,7 +154,7 @@ function drawCanvas(el, lines, availableWidth, lineHeight, font, color, textAlig
         } else if (textAlign === 'right') {
             x = width - line.width;
         }
-        ctx.fillText(line.text, Math.max(0, x), y + (lineHeight - parseInt(font))*0.3); // center vertically
+        ctx.fillText(line.text, Math.max(0, x), y + (lineHeight - parseInt(font)) * 0.3); // center vertically
         y += lineHeight;
     }
 }

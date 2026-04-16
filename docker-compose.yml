@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - ./db:/var/www/html/db
+      - ./cache:/var/www/html/cache
+    restart: always
+
+# Note: The database (nexus.db) will persevere in the ./db folder 
+# on the host machine even if the container is deleted or updated.

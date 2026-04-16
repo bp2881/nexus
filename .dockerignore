@@ -1,0 +1,10 @@
+.git
+.gitignore
+Dockerfile
+.dockerignore
+deployment_guide.md
+cache/*
+db/nexus.db
+.env
+README.md
+*.pem
