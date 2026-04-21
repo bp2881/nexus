@@ -2,3 +2,6 @@
 .env
 *.pem
 *.md
+*.db
+
+/admin/.htaccess # Contains IP addresses of the admin

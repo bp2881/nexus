@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Enable Apache mod_rewrite for friendly URLs
-RUN a2enmod rewrite
+# Enable Apache modules: rewrite for URLs, setenvif for cookie-based access control
+RUN a2enmod rewrite setenvif
 
 # Enable .htaccess support (AllowOverride All)
 RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
