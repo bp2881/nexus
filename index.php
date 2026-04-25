@@ -15,23 +15,23 @@ $stats = [
 ?>
 
 <!-- Hero Section -->
-<section class="relative px-8 py-24 md:py-40 max-w-screen-2xl mx-auto overflow-hidden">
+<section class="relative px-4 md:px-8 py-16 md:py-40 max-w-screen-2xl mx-auto overflow-hidden">
 <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-[120px]"></div>
 <div class="absolute top-1/2 -left-24 w-64 h-64 bg-secondary-container/10 rounded-full blur-[100px]"></div>
 <div class="relative z-10 grid grid-cols-12 gap-8">
 <div class="col-span-12 lg:col-span-7">
 <span class="inline-block bg-surface-container-highest text-primary font-label text-xs tracking-[0.2em] uppercase px-4 py-2 rounded-full mb-8">BUILD THE FUTURE</span>
-<h1 class="font-headline text-6xl md:text-8xl font-extrabold tracking-tighter mb-8 leading-[0.9] text-on-surface">
+<h1 class="font-headline text-4xl sm:text-6xl md:text-8xl font-extrabold tracking-tighter mb-8 leading-[1.1] md:leading-[0.9] text-on-surface">
                         Build. Learn.<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-container to-secondary">Ship Together.</span>
 </h1>
-<p class="text-xl md:text-2xl text-on-surface-variant max-w-xl mb-12 font-body leading-relaxed">
+<p class="text-lg md:text-2xl text-on-surface-variant max-w-xl mb-12 font-body leading-relaxed">
                         Nexus is where students turn ideas into real projects — through hackathons, workshops, open source drives, and a community that genuinely loves to code.
                     </p>
 <div class="flex flex-col sm:flex-row gap-4">
-<a href="/pages/contact.php" class="text-center bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold text-lg px-10 py-4 rounded-xl active:scale-95 duration-200 shadow-xl shadow-indigo-500/20">
+<a href="/pages/contact.php" class="text-center bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold text-base sm:text-lg px-6 sm:px-10 py-3 sm:py-4 rounded-xl active:scale-95 duration-200 shadow-xl shadow-indigo-500/20">
                             Join the Club
                         </a>
-<a href="/pages/projects.php" class="text-center bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-headline font-bold text-lg px-10 py-4 rounded-xl transition-all active:scale-95 duration-200">
+<a href="/pages/projects.php" class="text-center bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-headline font-bold text-base sm:text-lg px-6 sm:px-10 py-3 sm:py-4 rounded-xl transition-all active:scale-95 duration-200">
                             View Projects
                         </a>
 </div>
@@ -56,8 +56,8 @@ $stats = [
 </section>
 
 <!-- Stats Section -->
-<section class="bg-surface-container-low py-16">
-<div class="max-w-screen-2xl mx-auto px-8">
+<section class="bg-surface-container-low py-12 md:py-16">
+<div class="max-w-screen-2xl mx-auto px-4 md:px-8">
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
 <div class="text-center">
 <div class="text-4xl md:text-5xl font-black font-headline text-primary mb-2"><?= $stats['members'] ?>+</div>
@@ -80,10 +80,10 @@ $stats = [
 </section>
 
 <!-- What's Coming Up Section -->
-<section class="py-24 max-w-screen-2xl mx-auto px-8">
+<section class="py-16 md:py-24 max-w-screen-2xl mx-auto px-4 md:px-8">
 <div class="flex justify-between items-end mb-16">
 <div>
-<h2 class="text-4xl md:text-5xl font-extrabold font-headline mb-4">What's Coming Up</h2>
+<h2 class="text-3xl md:text-5xl font-extrabold font-headline mb-4">What's Coming Up</h2>
 <p class="text-on-surface-variant">Mark your calendars for the next wave of innovation.</p>
 </div>
 <a href="/pages/events.php" class="hidden md:flex items-center text-primary font-bold font-headline hover:gap-2 transition-all">
@@ -116,10 +116,10 @@ $stats = [
 </section>
 
 <!-- Featured Projects Section -->
-<section class="py-24 bg-surface-container-low overflow-hidden">
-<div class="max-w-screen-2xl mx-auto px-8">
+<section class="py-16 md:py-24 bg-surface-container-low overflow-hidden">
+<div class="max-w-screen-2xl mx-auto px-4 md:px-8">
 <div class="mb-20">
-<h2 class="text-4xl md:text-5xl font-extrabold font-headline mb-4">Featured Projects</h2>
+<h2 class="text-3xl md:text-5xl font-extrabold font-headline mb-4">Featured Projects</h2>
 <p class="text-on-surface-variant">Selected works from our most dedicated builders.</p>
 </div>
 <div class="flex flex-nowrap space-x-12 pb-12 overflow-x-auto scrollbar-hide">
@@ -134,7 +134,7 @@ $stats = [
     $tech_stack = array_slice(explode(',', $p['tech_stack']), 0, 1);
     $primary_tag = count($tech_stack) > 0 ? trim($tech_stack[0]) : "Project";
 ?>
-<div class="flex-none w-full md:w-[600px] <?= $i % 2 === 1 ? 'mt-20' : '' ?>">
+<div class="flex-none w-[85vw] md:w-[600px] <?= $i % 2 === 1 ? 'md:mt-20' : '' ?>">
 <div class="relative group">
 <div class="aspect-[16/10] overflow-hidden rounded-lg">
 <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="<?= $img ?>"/>
@@ -165,8 +165,8 @@ $stats = [
 </section>
 
 <!-- Latest Updates Section -->
-<section class="py-24 max-w-screen-2xl mx-auto px-8">
-<h2 class="text-4xl md:text-5xl font-extrabold font-headline mb-16 text-center">Latest Updates</h2>
+<section class="py-16 md:py-24 max-w-screen-2xl mx-auto px-4 md:px-8">
+<h2 class="text-3xl md:text-5xl font-extrabold font-headline mb-12 md:mb-16 text-center">Latest Updates</h2>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 <?php 
 $icons = ["rocket_launch", "forum", "verified", "campaign"];
@@ -194,14 +194,14 @@ foreach ($recent_posts as $i => $post):
 </section>
 
 <!-- Ready to Build Footer CTA -->
-<section class="py-32 relative overflow-hidden">
+<section class="py-20 md:py-32 relative overflow-hidden">
 <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/40 to-surface pointer-events-none"></div>
-<div class="max-w-4xl mx-auto px-8 relative z-10 text-center">
-<h2 class="text-5xl md:text-7xl font-black font-headline mb-8 tracking-tighter leading-tight">Ready to start building?</h2>
-<p class="text-xl md:text-2xl text-on-surface-variant mb-12 max-w-2xl mx-auto leading-relaxed">
+<div class="max-w-4xl mx-auto px-4 md:px-8 relative z-10 text-center">
+<h2 class="text-4xl md:text-7xl font-black font-headline mb-6 md:mb-8 tracking-tighter leading-tight">Ready to start building?</h2>
+<p class="text-lg md:text-2xl text-on-surface-variant mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed">
                     Join a collective of motivated students pushing the boundaries of what's possible in campus tech.
                 </p>
-<a href="/pages/contact.php" class="inline-block bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold text-xl px-12 py-5 rounded-full active:scale-95 duration-200 shadow-2xl shadow-indigo-500/40">
+<a href="/pages/contact.php" class="inline-block bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold text-lg md:text-xl px-8 py-4 md:px-12 md:py-5 rounded-full active:scale-95 duration-200 shadow-2xl shadow-indigo-500/40">
                     Join Nexus Today
                 </a>
 </div>

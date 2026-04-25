@@ -4,4 +4,6 @@
 *.md
 *.db
 
-/admin/.htaccess # Contains IP addresses of the admin
+admin/.htaccess # Contains IP addresses of the admin
+
+cache/*
