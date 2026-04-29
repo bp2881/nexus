@@ -14,7 +14,7 @@ $rest = array_slice($teams, 3);
 <main class="pt-32 pb-24 px-6 max-w-screen-xl mx-auto">
 <!-- Header Section -->
 <header class="text-center mb-16 relative">
-<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[300px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
 <h1 class="text-5xl md:text-7xl font-extrabold font-headline tracking-tight mb-4 relative z-10">Hall of <span class="text-primary">Legends</span></h1>
 <p class="text-xl text-on-surface-variant max-w-2xl mx-auto relative z-10">
                 Recognizing the top contributors, hackers, and teams in the Nexus ecosystem this season.

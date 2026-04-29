@@ -9,7 +9,7 @@ $albums = db_query("SELECT * FROM gallery_albums ORDER BY created_at DESC");
 <main class="pt-32 pb-24 px-6 max-w-screen-xl mx-auto min-h-screen">
 <!-- Hero Section -->
 <header class="text-center mb-16 relative">
-<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-tertiary-container/10 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[300px] bg-tertiary-container/10 rounded-full blur-[100px] pointer-events-none"></div>
 <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/20 mb-6 relative z-10">
     <span class="material-symbols-outlined text-xs text-tertiary">photo_library</span>
     <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">Memories</span>

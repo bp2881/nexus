@@ -24,7 +24,7 @@ $has_drive = !empty($album['drive_folder_url']);
 <main class="pt-32 pb-24 px-6 max-w-screen-2xl mx-auto min-h-screen">
 <!-- Hero Section -->
 <header class="text-center mb-16 relative">
-<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-tertiary-container/10 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[300px] bg-tertiary-container/10 rounded-full blur-[100px] pointer-events-none"></div>
 
 <a href="gallery.php" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/20 hover:bg-surface-container-highest transition-colors mb-6 relative z-10 text-on-surface-variant text-xs font-bold uppercase tracking-widest">
     <span class="material-symbols-outlined text-[14px]">arrow_back</span> Back to Gallery
